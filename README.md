@@ -112,10 +112,10 @@ When it's time to un-encrypt the Nsec, if the result doesn't start with "nsec1" 
 ## How To Compile & Test
 To dev:   
 1. Open in your editor, VSCodium is legit
-2. You'll need `https://nodejs.org`
-3. On root in IDE > Open Intergated Terminal > `npm start`
+2. You'll need NodeJS `https://nodejs.org`
+3. On root in IDE > Open Intergated Terminal > `npm i` then `npm start`
 To Build   
-1. On root in IDE > Open Intergated Terminal > `npm run build`
+1. On root in IDE > Open Intergated Terminal > `npm i` then `npm run build`
 2. Open folder `Root`>`src`>`compiled`>`manifest.json`
 3. Go into browser URL:
 3. - firefox: `about:debugging#/runtime/this-firefox`
