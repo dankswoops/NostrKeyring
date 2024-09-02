@@ -149,7 +149,7 @@ This project is licensed under the GNU General Public License v3.0 (GPLv3). This
 <!----------------------------------------------------------------------------->
 
 ## Acknowledgments
-Please note that this software is provided "as is," and we assume no liability for any issues that may arise from its use. There is no magic bullet for cyber security. Encrypting your nsec and storing it in the Storage API is superior to almost all forms of nsec management beside cold storage but advanced targeted attacks could still aquire your keys. If you use sim cards, post on centeralized social media, and use apple/windows products, worrying about state level actors zero-daying your keys should be the least of your concerns...   
+Please note that this software is provided "as is," and we assume no liability for any issues that may arise from its use. There is no magic bullet for cyber security. Encrypting your nsec and storing it in the Storage API is superior to almost all forms of nsec management but advanced targeted attacks could still aquire your keys. If you use sim cards, post on centeralized social media, and use apple/windows products, worrying about state level actors zero-daying your keys should be the least of your concerns...   
 <br />
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 <!----------------------------------------------------------------------------->
