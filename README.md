@@ -21,8 +21,8 @@
 [![Forks][forks-shield]][forks-url]
 [![Issues][issues-shield]][issues-url]
 [![Pull Requests][pr-shield]][pr-url]
-<!----------------------------------------------------------------------------->
 <br />
+<!----------------------------------------------------------------------------->
 <div align="center">
   <a href="#">
     <img src="https://github.com/dankswoops/NostrKeyring/blob/main/public/nostrkeyring.svg" alt="Logo" width="80" height="80">
