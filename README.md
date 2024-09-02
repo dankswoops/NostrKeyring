@@ -29,7 +29,7 @@
   </a>
   <h3 align="center">Nostr Keyring</h3>
   <p align="center">
-    _Because Nsec signers should have never required an email address..._
+    <i>"Because Nsec signers should have never required an email address..."</i>
   </p>
   <p align="center">
     <a href="https://primal.net/p/npub1yrkexvt88h6cgd32gdcfm55auuz6rw6c70xj478gcz6lstz5czvs9s77xh">Contact Founder</a>
