@@ -58,6 +58,7 @@ Nostr Keyring was made to be the simplest secure Nsec manager across all browser
 </div>
 <br />
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 <!----------------------------------------------------------------------------->
 
 ## How The App Works
@@ -157,6 +158,23 @@ Please note that this software is provided "as is," and we assume no liability f
 1.0.0: Offical Release 🎉🥳🎊   
 - It's stable, no clue what's broken or buggy yet 🤪   
 - Code Auditors! please examine `nip65.ts` and `manifest.json`'s connect-src 'self' wss://* and make sure it's secure.
+<br />
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+<!----------------------------------------------------------------------------->
+
+## Roadmap Before Full Release
+1. implement nip-07 (for the love of god 😭)
+1. add approve once, approve all button and request number
+1. remove *nip-7 access* text, add button for revoke access, and other one i forgot
+1. Create keys, sign into client, change profile pic, test nip65 update
+1. update window so it doesn't default back to userprofile if logged out
+1. Add feature to open folder and export binary file of all accounts
+1. Add localization files to app
+1. Add each language and all text remapping to i18 
+1. have users confirm all localizations
+1. compile to firefox, upload to mozilla dev account
+1. compile to chrome, upload to chrome dev account
+1. compile to safari, upload to safari dev account
 <br />
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 <!----------------------------------------------------------------------------->
