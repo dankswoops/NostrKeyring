@@ -46,15 +46,15 @@
 Nostr Keyring was made to be the simplest secure Nsec manager across all browsers.      
 <br />
 
-### Built With
+### Built With 
 <div align="center">
-  <a href="#"><img src="https://github.com/dankswoops/NostrKeyring/blob/main/icons/nostr.svg" width="60" height="60" alt="Nostr"></a>
+  <a href="#"><img src="https://github.com/dankswoops/NostrKeyring/blob/main/icons/typescript.svg" width="60" height="60" alt="TypeScript"></a>
   <a href="#"><img src="https://github.com/dankswoops/NostrKeyring/blob/main/icons/react.svg" width="60" height="60" alt="React"></a>
   <a href="#"><img src="https://github.com/dankswoops/NostrKeyring/blob/main/icons/tailwindcss.svg" width="60" height="60" alt="TailwindCSS"></a>
   <a href="#"><img src="https://github.com/dankswoops/NostrKeyring/blob/main/icons/vite.svg" width="60" height="60" alt="Vite"></a>
   <a href="#"><img src="https://github.com/dankswoops/NostrKeyring/blob/main/icons/html.svg" width="60" height="60" alt="HTML5"></a>
   <a href="#"><img src="https://github.com/dankswoops/NostrKeyring/blob/main/icons/json.svg" width="60" height="60" alt="JSON"></a>
-  <a href="#"><img src="https://github.com/dankswoops/NostrKeyring/blob/main/icons/typescript.svg" width="60" height="60" alt="TypeScript"></a>
+  <a href="#"><img src="https://github.com/dankswoops/NostrKeyring/blob/main/icons/nostr.svg" width="60" height="60" alt="Nostr"></a>
 </div>
 <br />
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
