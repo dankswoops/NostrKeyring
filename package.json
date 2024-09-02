@@ -1,0 +1,33 @@
+{
+  "name": "nostrkeyring",
+  "version": "0.00",
+  "type": "module",
+  "private": true,
+  "dependencies": {
+    "@types/crypto-js": "^4.2.2",
+    "crypto-js": "^4.2.0",
+    "hash-wasm": "^4.11.0",
+    "nostr-tools": "^2.7.2",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "webextension-polyfill": "^0.12.0"
+  },
+  "scripts": {
+    "start": "vite --port 3000 --open",
+    "build": "tsc && vite build"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.0.270",
+    "@types/node": "^22.5.0",
+    "@types/react": "^18.0.25",
+    "@types/react-dom": "^18.0.9",
+    "@types/webextension-polyfill": "^0.12.1",
+    "@vitejs/plugin-react": "^4.3.1",
+    "autoprefixer": "^10.4.16",
+    "postcss": "^8.4.31",
+    "tailwindcss": "^3.3.5",
+    "typescript": "^5.5.3",
+    "vite": "^5.4.2",
+    "vite-plugin-svgr": "^4.2.0"
+  }
+}

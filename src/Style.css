@@ -1,0 +1,25 @@
+@tailwind base; @tailwind components; @tailwind utilities;
+body { background: #11131F; color: #C4C8CB }
+/* REMOVE SCROLL */
+._disableScroll{overflow: hidden !important}
+*::-webkit-scrollbar{width:0px;} /* Chrome, Safari, & Opera */
+*{scrollbar-width: none; /* Firefox */ -ms-overflow-style: none /* IE & Edge */}
+/* REMOVE DRAG, HIGHLIGHT, & POINTER */
+[draggable=false]{
+  user-select: none; /* Prevent text selection */
+  pointer-events: none; /* Disable pointer events */
+  -o-user-select: none; /* Opera */
+  -ms-user-select: none; /* Internet Explorer & Edge */
+  -moz-user-select: none; /* Firefox */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -webkit-user-select: none; /* Safari */
+  -webkit-touch-callout: none; /* Prevent iOS touch callout */
+  -webkit-tap-highlight-color: transparent; /* Remove tap highlight */
+  -webkit-tap-highlight-color: rgba(0,0,0,0) /* Remove tap highlight for older WebKit */
+}
+@layer utilities {#loader {animation: pulse-animation 1.8s linear infinite}}
+@keyframes pulse-animation {
+  0%   {opacity: 1;transform: scale(0)}
+  80%  {opacity: 0}
+  100% {transform: scale(2.3);opacity: 0}
+}

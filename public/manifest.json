@@ -1,0 +1,39 @@
+{
+  "manifest_version": 2,
+  "name": "Nostr Key Manager",
+  "version": "1.0.0",
+  "description": "A secure Nostr key manager for multiple browsers",
+  "browser_action": {
+    "default_title": "Nostr Profile Key Manager",
+    "default_popup": "index.html",
+    "default_icon": {
+      "16": "nostrkeyring.svg",
+      "48": "nostrkeyring.svg",
+      "128": "nostrkeyring.svg"
+    }
+  },
+  "icons": {
+    "16": "nostrkeyring.svg",
+    "48": "nostrkeyring.svg",
+    "128": "nostrkeyring.svg"
+  },
+  "permissions": [
+    "storage",
+    "<all_urls>"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content-script.js"],
+      "run_at": "document_start"
+    }
+  ],
+  "content_security_policy": "script-src 'self'; connect-src 'self' wss://*; object-src 'self'",
+  "web_accessible_resources": [
+    "nostrkeyring.svg"
+  ],
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": false
+  }
+}
