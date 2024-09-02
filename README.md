@@ -21,8 +21,8 @@
 [![Forks][forks-shield]][forks-url]
 [![Issues][issues-shield]][issues-url]
 [![Pull Requests][pr-shield]][pr-url]
-<br />
 <!----------------------------------------------------------------------------->
+<br />
 <div align="center">
   <a href="#">
     <img src="https://github.com/dankswoops/NostrKeyring/blob/main/public/nostrkeyring.svg" alt="Logo" width="80" height="80">
@@ -160,6 +160,7 @@ Please note that this software is provided "as is," and we assume no liability f
 <br />
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 <!----------------------------------------------------------------------------->
+
 <!-- MARKDOWN LINKS & IMAGES -->
 [contributors-shield]: https://img.shields.io/github/contributors/dankswoops/NostrKeyring.svg?style=for-the-badge
 [contributors-url]: https://github.com/dankswoops/NostrKeyring/graphs/contributors
