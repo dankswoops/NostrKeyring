@@ -15,6 +15,6 @@ export default defineConfig({
     },
     outDir: 'compiled',
     emptyOutDir: true,
-    sourcemap: false, // Disable source map generation
+    sourcemap: false
   }
 })

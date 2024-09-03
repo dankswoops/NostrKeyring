@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface AboutProps {
   onBack: () => void;
 }
 
 export default function X({ onBack }: AboutProps) {
-  const [language, setLanguage] = useState('en');
   const [authorText, setAuthorText] = useState('Click to Copy my Npub');
+  const { t, i18n } = useTranslation();
 
   useEffect(() => {
     const loadLanguagePreference = async () => {
@@ -14,24 +15,24 @@ export default function X({ onBack }: AboutProps) {
         // We're in a browser extension environment
         chrome.storage.sync.get(['language'], (result) => {
           if (result.language) {
-            setLanguage(result.language);
+            i18n.changeLanguage(result.language);
           }
         });
       } else {
         // We're in a development environment
         const savedLanguage = localStorage.getItem('language');
         if (savedLanguage) {
-          setLanguage(savedLanguage);
+          i18n.changeLanguage(savedLanguage);
         }
       }
     };
 
     loadLanguagePreference();
-  }, []);
+  }, [i18n]);
 
   const handleLanguageChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const newLanguage = event.target.value;
-    setLanguage(newLanguage);
+    i18n.changeLanguage(newLanguage);
 
     if (typeof chrome !== 'undefined' && chrome.storage) {
       // We're in a browser extension environment
@@ -60,11 +61,11 @@ export default function X({ onBack }: AboutProps) {
         className="text-white h-[40px] w-[150px] bg-gradient-to-b from-[#9339F4] to-[#105FB0] rounded mt-[25px] mb-[20px]"
         onClick={onBack}
       >
-        Back
+        {t('back')}
       </button>
       <div className="mb-[20px]">
         <select
-          value={language}
+          value={i18n.language}
           onChange={handleLanguageChange}
           className="indent-[1px] rounded border text-black border-gray-300 h-[40px] w-[150px] flex items-center"
         >
