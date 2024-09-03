@@ -115,6 +115,7 @@ To Dev:
 1. Open in your editor, VSCodium is legit
 2. You'll need NodeJS `https://nodejs.org`
 3. On root in IDE > Open Intergated Terminal > `npm i` then `npm start`
+
 To Build:   
 1. On root in IDE > Open Intergated Terminal > `npm i` then `npm run build`
 2. Open folder `Root`>`src`>`compiled`>`manifest.json`
@@ -124,6 +125,7 @@ To Build:
 3. - safari: ``
 4. Load Temporary Add-on...
 5. Add `manifest.json` and check your extension to open
+
 To Push:   
 1. git add .
 2. git commit -m ""
