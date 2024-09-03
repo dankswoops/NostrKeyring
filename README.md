@@ -110,12 +110,12 @@ When it's time to un-encrypt the Nsec, if the result doesn't start with "nsec1" 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 <!----------------------------------------------------------------------------->
 
-## How To Compile & Test
-To dev:   
+## How To Compile, Test, & Push
+To Dev:   
 1. Open in your editor, VSCodium is legit
 2. You'll need NodeJS `https://nodejs.org`
 3. On root in IDE > Open Intergated Terminal > `npm i` then `npm start`
-To Build   
+To Build:   
 1. On root in IDE > Open Intergated Terminal > `npm i` then `npm run build`
 2. Open folder `Root`>`src`>`compiled`>`manifest.json`
 3. Go into browser URL:
@@ -124,6 +124,12 @@ To Build
 3. - safari: ``
 4. Load Temporary Add-on...
 5. Add `manifest.json` and check your extension to open
+To Push:   
+1. git add .
+2. git commit -m ""
+3. git push origin main
+4. username
+5. password token
 <br />
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 <!----------------------------------------------------------------------------->

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { generateSecretKey, isValidSecretKey, getPublicKeyHex } from '../utils/nip19';
 import { fetchUserDataAndRelays } from '../utils/nip65';
 import { encryptSecretKey, generateSalt } from '../utils/encrypt';
-import { createUserProfile } from '../utils/storage';
+import { getUserProfiles, createUserProfile } from '../utils/storage';
 
 interface CreateProps {
   onUserCreated: () => void;
@@ -28,6 +28,8 @@ export default function Create({ onUserCreated, onBack }: CreateProps) {
   const [metadata, setMetadata] = useState<UserMetadata | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [importStatus, setImportStatus] = useState('');
+  const [showImportStatus, setShowImportStatus] = useState(false);
 
   useEffect(() => {
     const checkValidityAndFetchData = async () => {
@@ -115,6 +117,81 @@ export default function Create({ onUserCreated, onBack }: CreateProps) {
     }
   };
 
+  const handleExport = async () => {
+    try {
+      const profiles = await getUserProfiles();
+      const exportData = JSON.stringify(profiles);
+      const blob = new Blob([exportData], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'nostr_keyring_backup.json';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Failed to export data:', error);
+      // You might want to show an error message to the user here
+    }
+  };
+
+
+  const handleImport = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) {
+      showStatusMessage('No file selected');
+      return;
+    }
+
+    if (file.name !== 'nostr_keyring_backup.json') {
+      showStatusMessage('Invalid File');
+      return;
+    }
+
+    try {
+      const fileContent = await file.text();
+      const importedProfiles = JSON.parse(fileContent);
+
+      // Validate imported data structure
+      if (!Array.isArray(importedProfiles) || !importedProfiles.every(isValidProfileData)) {
+        throw new Error('Invalid import file structure');
+      }
+
+      // Import each profile
+      for (const profile of importedProfiles) {
+        await createUserProfile(profile);
+      }
+
+      showStatusMessage('File Loaded');
+      onUserCreated(); // Notify parent component that profiles were imported
+    } catch (error) {
+      console.error('Failed to import data:', error);
+      showStatusMessage('Upload Failed');
+    }
+  };
+
+  const showStatusMessage = (message: string) => {
+    setImportStatus(message);
+    setShowImportStatus(true);
+    setTimeout(() => {
+      setShowImportStatus(false);
+    }, 3000);
+  };
+
+  // Helper function to validate UserProfile structure
+  const isValidProfileData = (profile: any): boolean => {
+    return (
+      typeof profile === 'object' &&
+      profile !== null &&
+      typeof profile.pubkey === 'string' &&
+      typeof profile.name === 'string' &&
+      typeof profile.salt === 'string' &&
+      typeof profile.secretKey === 'string'
+    );
+  };
+
   const renderMetadata = () => {
     if (isLoading) {
       return <div draggable="false" className="text-center my-4">Loading user data...</div>;
@@ -125,8 +202,34 @@ export default function Create({ onUserCreated, onBack }: CreateProps) {
     }
 
     if (!metadata) {
-      return <div draggable="false" className="text-center my-4">No user data available</div>;
-    }
+      return (
+        <>
+          <div draggable="false" className="text-center mb-[15px]">No user data available</div>
+          <button
+            className="text-white h-[40px] w-[150px] bg-gradient-to-b from-[#9339F4] to-[#105FB0] rounded mb-[20px]"
+            onClick={handleExport}
+          >
+            Export Backup
+          </button>
+          <label className="text-white h-[40px] w-[150px] bg-gradient-to-b from-[#9339F4] to-[#105FB0] rounded flex items-center justify-center cursor-pointer">
+            <input
+              type="file"
+              accept=".json"
+              onChange={handleImport}
+              className="hidden"
+            />
+            <span draggable="false">Import Backup</span>
+          </label>
+          <div draggable="false" className="text-sm text-center mt-[15px]">
+            <p>Please select the 'nostr_keyring_backup.json' file from your download folder.</p>
+            <p>You may need to navigate to find this file on your device.</p>
+          </div>
+          {showImportStatus && (
+            <div draggable="false" className="text-center mt-[15px] text-red-500 font-bold">{importStatus}</div>
+          )}
+        </>
+      );
+    };
 
     return (
       <div draggable="false" className="mb-[15px] flex items-center">
