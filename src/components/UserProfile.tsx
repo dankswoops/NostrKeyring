@@ -347,21 +347,9 @@ export default function UserProfile({ user, onBack, onDelete, onUserUpdate, onLo
           </div>
         </>
       )}
-      {error && (
-        <div draggable="false">
-          <p className="text-red-500">{error}</p>
-          {retryCountdown > 0 && (
-            <p className="text-yellow-500 text-center">Try again in: {retryCountdown}</p>
-          )}
-        </div>
-      )}
       {isLoggedIn && (
         <>
-          <div draggable="false" className='italic mb-[20px]'>
-            * Nip-07 Access Granted *
-          </div>
-
-          <div className='flex gap-[5px] mb-[5px]'>
+          <div className='flex gap-[5px] my-[5px]'>
             <button
               className="text-white h-[40px] w-[126px] bg-[#C32F2F] rounded-tl"
               onClick={handleDeleteClick}
@@ -474,6 +462,14 @@ export default function UserProfile({ user, onBack, onDelete, onUserUpdate, onLo
             </div>
           )}
         </>
+      )}
+      {error && (
+        <div draggable="false">
+          <p className="text-red-500">{error}</p>
+          {retryCountdown > 0 && (
+            <p className="text-yellow-500 text-center">Try again in: {retryCountdown}</p>
+          )}
+        </div>
       )}
     </div>
   );
