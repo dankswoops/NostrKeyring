@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { generateSecretKey, isValidSecretKey, getPublicKeyHex } from '../utils/nip19';
+import { generateSecretKey, isValidSecretKey, getPublicKeyHex, nip19 } from '../utils/nip19';
 import { fetchUserDataAndRelays } from '../utils/nip65';
 import { encryptSecretKey } from '../utils/encrypt';
 import { getUserProfiles, createUserProfile } from '../utils/storage';
-import { nip19 } from 'nostr-tools';
 
 interface CreateProps {
   onUserCreated: () => void;
