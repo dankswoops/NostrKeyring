@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { generateSecretKey, isValidSecretKey, getPublicKeyHex } from '../utils/nip19';
 import { fetchUserDataAndRelays } from '../utils/nip65';
-import { encryptSecretKey, generateSalt } from '../utils/encrypt';
+import { encryptSecretKey } from '../utils/encrypt';
 import { getUserProfiles, createUserProfile } from '../utils/storage';
+import { nip19 } from 'nostr-tools';
 
 interface CreateProps {
   onUserCreated: () => void;
@@ -87,26 +88,28 @@ export default function Create({ onUserCreated, onBack }: CreateProps) {
       console.error('Metadata Error, Try Again');
       return;
     }
-
+  
+    const secretKey = nsec;
     const pubkeyHex = getPublicKeyHex(nsec);
-    let finalSecretKey = nsec;
-    const salt = generateSalt();
+    const npub = nip19.npubEncode(pubkeyHex);
+    
+    let finalNsec = nsec;
     if (encryptKey) {
-      finalSecretKey = await encryptSecretKey(nsec, password, salt);
+      finalNsec = await encryptSecretKey(nsec, password, pubkeyHex); // Use pubkeyHex as salt
     }
-
+  
     // Generate a random number between 0 and 999
     const randomNumber = Math.floor(Math.random() * 1000);
-
+  
     await createUserProfile({
+      nsec: finalNsec,
+      npub: npub,
       pubkey: pubkeyHex,
       name: metadata.name || `Unnamed ${randomNumber}`,
       picture: metadata.picture,
-      lud16: metadata.lud16,
-      salt: salt,
-      secretKey: finalSecretKey
+      lud16: metadata.lud16
     });
-
+  
     onUserCreated();
   };
 

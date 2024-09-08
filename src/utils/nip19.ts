@@ -22,3 +22,7 @@ export const getPublicKeyHex = (secretKey: string): string => {
   }
   return getPublicKey(data);
 };
+
+export const encodePublicKey = (pubkey: string): string => {
+  return nip19.npubEncode(pubkey);
+};

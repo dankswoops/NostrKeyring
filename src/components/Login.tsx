@@ -3,12 +3,12 @@ import { getUserProfiles } from '../utils/storage';
 
 interface UserProfile {
   id: number;
+  nsec: string;
+  npub: string;
   pubkey: string;
   name: string;
   picture?: string;
   lud16?: string;
-  salt: string;
-  secretKey: string;
 }
 
 interface LoginProps {

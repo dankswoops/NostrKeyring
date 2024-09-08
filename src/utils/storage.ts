@@ -1,11 +1,11 @@
 interface UserProfile {
   id: number;
+  nsec: string;
+  npub: string;
   pubkey: string;
   name: string;
   picture?: string;
   lud16?: string;
-  salt: string;
-  secretKey: string;
 }
 
 interface LoginState {
@@ -106,39 +106,6 @@ export const updateUserProfile = async (updatedProfileData: Partial<UserProfile>
           reject(chrome.runtime.lastError);
         } else {
           console.log('User profile updated');
-          resolve();
-        }
-      });
-    });
-  });
-};
-
-export const updateUserSecretKey = async (pubkey: string, newSecretKey: string): Promise<void> => {
-  return new Promise((resolve, reject) => {
-    getStorage().get(['users'], (result) => {
-      const users = result.users || [];
-      const userIndex = users.findIndex((user: UserProfile) => user.pubkey === pubkey);
-
-      if (userIndex === -1) {
-        reject(new Error('User not found'));
-        return;
-      }
-
-      const updatedUsers = users.map((user: UserProfile) => {
-        if (user.pubkey === pubkey) {
-          return {
-            ...user,
-            secretKey: newSecretKey,
-          };
-        }
-        return user;
-      });
-
-      getStorage().set({ users: updatedUsers }, () => {
-        if (isExtensionEnvironment && chrome.runtime.lastError) {
-          reject(chrome.runtime.lastError);
-        } else {
-          console.log('User secret key updated');
           resolve();
         }
       });

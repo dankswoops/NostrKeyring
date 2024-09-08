@@ -1,14 +1,10 @@
 import { argon2id } from 'hash-wasm';
 import CryptoJS from 'crypto-js';
 
-export const generateSalt = (): string => {
-  return CryptoJS.lib.WordArray.random(16).toString(CryptoJS.enc.Hex);
-};
-
-export const encryptSecretKey = async (secretKey: string, password: string, salt: string): Promise<string> => {
+export const encryptSecretKey = async (secretKey: string, password: string, pubkey: string): Promise<string> => {
   const hash = await argon2id({
     password,
-    salt,
+    salt: pubkey,
     parallelism: 1,
     memorySize: 65536,
     iterations: 3,
@@ -20,10 +16,10 @@ export const encryptSecretKey = async (secretKey: string, password: string, salt
   return encrypted;
 };
 
-export const decryptSecretKey = async (encryptedKey: string, password: string, salt: string): Promise<string> => {
+export const decryptSecretKey = async (encryptedKey: string, password: string, pubkey: string): Promise<string> => {
   const hash = await argon2id({
     password,
-    salt,
+    salt: pubkey,
     parallelism: 1,
     memorySize: 65536,
     iterations: 3,
