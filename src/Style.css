@@ -17,6 +17,7 @@ body { background: #11131F; color: #C4C8CB }
   -webkit-tap-highlight-color: transparent; /* Remove tap highlight */
   -webkit-tap-highlight-color: rgba(0,0,0,0) /* Remove tap highlight for older WebKit */
 }
+/* NIP-65 LOADER PULSE */
 @layer utilities {#loader {animation: pulse-animation 1.8s linear infinite}}
 @keyframes pulse-animation {
   0%   {opacity: 1;transform: scale(0)}

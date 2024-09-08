@@ -8,7 +8,15 @@ import About from './components/About';
 import Login from './components/Login';
 import Create from './components/Create';
 import UserProfile from './components/UserProfile';
-import { deleteUserProfile, getUserProfiles, updateUserProfile, getLoginState, setLoginState, clearLoginState, getLoggedInUserProfile } from './utils/storage';
+import { 
+  deleteUserProfile, 
+  getUserProfiles, 
+  updateUserProfile, 
+  getLoginState, 
+  setLoginState, 
+  clearLoginState, 
+  getLoggedInUserProfile 
+} from './utils/storage';
 
 interface UserProfile {
   id: number;
