@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { decryptSecretKey, encryptSecretKey } from '../utils/encrypt';
 import { fetchUserDataAndRelays } from '../utils/nip65';
-import { nip19 } from 'nostr-tools';
 import {
   updateUserProfile,
   clearLoginState,
@@ -107,8 +106,12 @@ export default function UserProfile({ user, onBack, onDelete, onUserUpdate, onLo
       }
 
       if (hasChanges) {
-        await updateUserProfile({ ...updatedFields, pubkey: user.pubkey });
-        setUpdatedUser(prevUser => ({ ...prevUser, ...updatedFields }));
+        const updatedUserData = {
+          ...user,
+          ...updatedFields
+        };
+        await updateUserProfile(updatedUserData);
+        setUpdatedUser(updatedUserData);
         console.log('User profile updated');
       }
     } catch (err) {

@@ -20,21 +20,17 @@ import {
 
 interface UserProfile {
   id: number;
+  nsec: string;
+  npub: string;
   pubkey: string;
   name: string;
   picture?: string;
   lud16?: string;
-  salt: string;
-  secretKey: string;
 }
-
-type UserType = UserProfile & {
-  joinedDate: string;
-};
 
 const App = () => {
   const [currentPage, setCurrentPage] = useState<'login' | 'create' | 'user' | 'about'>('login');
-  const [selectedUser, setSelectedUser] = useState<UserType | null>(null);
+  const [selectedUser, setSelectedUser] = useState<UserProfile | null>(null);
   const [users, setUsers] = useState<UserProfile[]>([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -66,11 +62,7 @@ const App = () => {
   };
 
   const handleUserSelect = (user: UserProfile) => {
-    const userWithJoinedDate: UserType = {
-      ...user,
-      joinedDate: new Date(user.id).toLocaleDateString()
-    };
-    setSelectedUser(userWithJoinedDate);
+    setSelectedUser(user);
     setCurrentPage('user');
     setIsLoggedIn(true);
     setLoginState({ isLoggedIn: true, loggedInUserId: user.id });
@@ -104,14 +96,13 @@ const App = () => {
     }
   };
 
-  const handleUserUpdate = async (updatedUser: UserType) => {
-    const { joinedDate, ...userWithoutJoinedDate } = updatedUser;
+  const handleUserUpdate = async (updatedUser: UserProfile) => {
     const updatedUsers = users.map(user => 
-      user.id === updatedUser.id ? userWithoutJoinedDate : user
+      user.id === updatedUser.id ? updatedUser : user
     );
     setUsers(updatedUsers);
     setSelectedUser(updatedUser);
-    await updateUserProfile(userWithoutJoinedDate);
+    await updateUserProfile(updatedUser);
   };
 
   const handleLogout = () => {
