@@ -1,4 +1,4 @@
-import { SimplePool, Filter, Event } from 'nostr-tools';
+import { SimplePool, Filter } from 'nostr-tools';
 
 const RELAY_URLS = ['wss://purplepag.es', 'wss://relay.damus.io', 'wss://relay.primal.net'];
 
