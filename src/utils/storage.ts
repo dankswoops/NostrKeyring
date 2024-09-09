@@ -1,3 +1,5 @@
+import { encryptSecretKey, decryptSecretKey } from './encrypt';
+
 interface UserProfile {
   id: number;
   nsec: string;
@@ -13,7 +15,15 @@ interface LoginState {
   loggedInUserId: number | null;
 }
 
+interface PersistentLoginState {
+  isLoggedIn: boolean;
+  userId: number;
+  pubkey: string;
+}
+
 const isExtensionEnvironment = typeof chrome !== 'undefined' && chrome.storage;
+
+const tempNsecCache: { [pubkey: string]: string } = {};
 
 const getStorage = () => {
   if (isExtensionEnvironment) {
@@ -38,11 +48,24 @@ const getStorage = () => {
   }
 };
 
+export const initializeNsecCache = async (): Promise<void> => {
+  const users = await getUserProfiles();
+  users.forEach(user => {
+    if (user.nsec.startsWith('nsec1')) {
+      tempNsecCache[user.pubkey] = user.nsec;
+    }
+  });
+};
+
 export const createUserProfile = async (profileData: Omit<UserProfile, 'id'>): Promise<void> => {
   const newUser: UserProfile = {
     id: Date.now(),
     ...profileData,
   };
+
+  if (newUser.nsec.startsWith('nsec1')) {
+    tempNsecCache[newUser.pubkey] = newUser.nsec;
+  }
 
   return new Promise((resolve, reject) => {
     getStorage().get(['users'], (result) => {
@@ -91,12 +114,15 @@ export const updateUserProfile = async (updatedProfileData: Partial<UserProfile>
       const users = result.users || [];
       const updatedUsers = users.map((user: UserProfile) => {
         if (user.pubkey === updatedProfileData.pubkey) {
-          return {
+          const updatedUser = {
             ...user,
-            name: updatedProfileData.name || user.name,
-            picture: updatedProfileData.picture || user.picture,
-            lud16: updatedProfileData.lud16 || user.lud16,
+            ...updatedProfileData,
+            nsec: updatedProfileData.nsec || user.nsec,
           };
+          if (updatedUser.nsec.startsWith('nsec1')) {
+            tempNsecCache[updatedUser.pubkey] = updatedUser.nsec;
+          }
+          return updatedUser;
         }
         return user;
       });
@@ -111,6 +137,44 @@ export const updateUserProfile = async (updatedProfileData: Partial<UserProfile>
       });
     });
   });
+};
+
+export const decryptAndCacheNsec = async (encryptedNsec: string, password: string, pubkey: string): Promise<string> => {
+  try {
+    const decrypted = await decryptSecretKey(encryptedNsec, password, pubkey);
+    tempNsecCache[pubkey] = decrypted;
+    return decrypted;
+  } catch (error) {
+    console.error('Error decrypting nsec:', error);
+    throw error;
+  }
+};
+
+export const getCachedNsec = (pubkey: string): string | null => {
+  return tempNsecCache[pubkey] || null;
+};
+
+// export const clearCachedNsec = (pubkey: string): void => {
+//   delete tempNsecCache[pubkey];
+// };
+
+// export const clearAllCachedNsecs = (): void => {
+//   Object.keys(tempNsecCache).forEach(key => delete tempNsecCache[key]);
+// };
+
+export const reencryptAndUpdateNsec = async (pubkey: string, newPassword: string): Promise<void> => {
+  const cachedNsec = getCachedNsec(pubkey);
+  if (!cachedNsec) {
+    throw new Error('Nsec not found in cache');
+  }
+
+  const newEncryptedNsec = await encryptSecretKey(cachedNsec, newPassword, pubkey);
+  await updateUserProfile({ pubkey, nsec: newEncryptedNsec });
+};
+
+export const storeUnencryptedNsec = async (pubkey: string, nsec: string): Promise<void> => {
+  tempNsecCache[pubkey] = nsec;
+  return updateUserProfile({ pubkey, nsec });
 };
 
 export const setLoginState = async (loginState: LoginState): Promise<void> => {
@@ -147,12 +211,6 @@ export const getLoggedInUserProfile = async (): Promise<UserProfile | null> => {
   const users = await getUserProfiles();
   return users.find(user => user.id === loginState.loggedInUserId) || null;
 };
-
-interface PersistentLoginState {
-  isLoggedIn: boolean;
-  userId: number;
-  pubkey: string;
-}
 
 export const setPersistentLoginState = async (state: PersistentLoginState): Promise<void> => {
   return new Promise((resolve, reject) => {

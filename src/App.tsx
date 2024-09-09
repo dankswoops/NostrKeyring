@@ -15,7 +15,8 @@ import {
   getLoginState, 
   setLoginState, 
   clearLoginState, 
-  getLoggedInUserProfile 
+  getLoggedInUserProfile,
+  initializeNsecCache
 } from './utils/storage';
 
 interface UserProfile {
@@ -35,8 +36,18 @@ const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    loadUsers();
-    checkLoginState();
+    const initialize = async () => {
+      try {
+        await initializeNsecCache();
+        console.log('Nsec cache initialized');
+      } catch (error) {
+        console.error('Error initializing nsec cache:', error);
+      }
+      loadUsers();
+      checkLoginState();
+    };
+
+    initialize();
   }, []);
 
   const loadUsers = async () => {

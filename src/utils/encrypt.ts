@@ -1,7 +1,7 @@
 import { argon2id } from 'hash-wasm';
 import CryptoJS from 'crypto-js';
 
-export const encryptSecretKey = async (secretKey: string, password: string, pubkey: string): Promise<string> => {
+export const encryptSecretKey = async (nsec: string, password: string, pubkey: string): Promise<string> => {
   const hash = await argon2id({
     password,
     salt: pubkey,
@@ -12,7 +12,7 @@ export const encryptSecretKey = async (secretKey: string, password: string, pubk
     outputType: 'hex',
   });
 
-  const encrypted = CryptoJS.AES.encrypt(secretKey, hash).toString();
+  const encrypted = CryptoJS.AES.encrypt(nsec, hash).toString();
   return encrypted;
 };
 

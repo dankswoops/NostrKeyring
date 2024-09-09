@@ -1,13 +1,15 @@
 import { useState, useEffect } from 'react';
-import { decryptSecretKey, encryptSecretKey } from '../utils/encrypt';
 import { fetchUserDataAndRelays } from '../utils/nip65';
 import {
   updateUserProfile,
-  clearLoginState,
   setPersistentLoginState,
   getPersistentLoginState,
   clearPersistentLoginState,
-  getUserProfiles
+  getUserProfiles,
+  decryptAndCacheNsec,
+  getCachedNsec,
+  reencryptAndUpdateNsec,
+  storeUnencryptedNsec
 } from '../utils/storage';
 import Loader from './Loader';
 
@@ -81,9 +83,6 @@ export default function UserProfile({ user, onBack, onDelete, onUserUpdate, onLo
     const persistentState = await getPersistentLoginState();
     if (persistentState && persistentState.isLoggedIn && persistentState.userId === user.id) {
       setIsLoggedIn(true);
-      if (user.nsec.startsWith('nsec1')) {
-        setDecryptedNsec(user.nsec);
-      }
       fetchLatestUserData();
     }
   };
@@ -126,6 +125,7 @@ export default function UserProfile({ user, onBack, onDelete, onUserUpdate, onLo
   };
 
   const closeAllElements = () => {
+    setError('');
     setShowDeleteConfirmation(false);
     setShowChangePassword(false);
     setShowNsec(false);
@@ -180,7 +180,6 @@ export default function UserProfile({ user, onBack, onDelete, onUserUpdate, onLo
 
   const handleLogout = async () => {
     setShowNsec(false);
-    setDecryptedNsec('');
     setPassword('');
     setError('');
     await clearPersistentLoginState();
@@ -190,44 +189,21 @@ export default function UserProfile({ user, onBack, onDelete, onUserUpdate, onLo
 
   const handleChangePassword = async () => {
     try {
-      const users = await getUserProfiles();
-      const currentUser = users.find(u => u.pubkey === user.pubkey);
-      
-      if (!currentUser) {
-        throw new Error('User not found');
-      }
-  
-      let currentSecretKey = currentUser.nsec;
-      let updatedNsec;
-  
-      if (!currentSecretKey.startsWith('nsec1')) {
-        try {
-          currentSecretKey = await decryptSecretKey(currentSecretKey, password, currentUser.pubkey);
-        } catch (error) {
-          console.error('Error decrypting current key:', error);
-          setError('Unable to decrypt the current key. Please try logging out and back in.');
-          return;
-        }
-      }
-  
       if (newPassword === '' && verifyNewPassword === '') {
-        updatedNsec = currentSecretKey; // Keep it unencrypted
-      } else if (newPassword === verifyNewPassword) {
-        updatedNsec = await encryptSecretKey(currentSecretKey, newPassword, currentUser.pubkey);
-      } else {
+        // User wants to remove password
+        const cachedNsec = getCachedNsec(user.pubkey);
+        if (!cachedNsec) {
+          throw new Error('Nsec not found in cache');
+        }
+        await storeUnencryptedNsec(user.pubkey, cachedNsec);
+        setUpdatedUser(prevUser => ({ ...prevUser, nsec: cachedNsec }));
+      } else if (newPassword !== verifyNewPassword) {
         setError('New passwords do not match');
         return;
+      } else {
+        await reencryptAndUpdateNsec(user.pubkey, newPassword);
       }
-  
-      const updatedUserData = {
-        ...updatedUser,
-        nsec: updatedNsec
-      };
-  
-      await updateUserProfile(updatedUserData);
-      setUpdatedUser(updatedUserData);
-      onUserUpdate(updatedUserData);
-  
+
       // Reset state
       setPassword('');
       setNewPassword('');
@@ -235,20 +211,11 @@ export default function UserProfile({ user, onBack, onDelete, onUserUpdate, onLo
       setShowChangePassword(false);
       setShowNewPassword(false);
       setError('');
-  
-      if (updatedNsec.startsWith('nsec1')) {
-        setIsLoggedIn(true);
-        setDecryptedNsec(updatedNsec);
-      } else {
-        setDecryptedNsec('');
-      }
       
-      await setPersistentLoginState({ isLoggedIn: true, userId: updatedUser.id, pubkey: updatedUser.pubkey });
-  
-      console.log('Password changed successfully');
+      console.log('Password updated successfully');
     } catch (error) {
-      console.error('Error changing password:', error);
-      setError('Failed to change password. Please try again.');
+      console.error('Error updating password:', error);
+      setError('Failed to update password. Please try again.');
     }
   };
 
@@ -265,11 +232,9 @@ export default function UserProfile({ user, onBack, onDelete, onUserUpdate, onLo
   
       if (loggedInUser.nsec.startsWith('nsec1')) {
         setIsLoggedIn(true);
-        setDecryptedNsec(loggedInUser.nsec);
         await setPersistentLoginState({ isLoggedIn: true, userId: loggedInUser.id, pubkey: loggedInUser.pubkey });
       } else {
-        const decrypted = await decryptSecretKey(loggedInUser.nsec, password, loggedInUser.pubkey);
-        setDecryptedNsec(decrypted);
+        await decryptAndCacheNsec(loggedInUser.nsec, password, loggedInUser.pubkey);
         setIsLoggedIn(true);
         setError('');
         setShowNewPassword(false);
@@ -397,10 +362,10 @@ export default function UserProfile({ user, onBack, onDelete, onUserUpdate, onLo
               <p draggable="false" className="mt-[5px] font-bold">Secret Key (Nsec):</p>
               <div 
                 id="copyNsec" 
-                onClick={() => handleCopy(decryptedNsec || user.nsec, setCopiedNsec)}
+                onClick={() => handleCopy(getCachedNsec(user.pubkey) || '', setCopiedNsec)}
                 className={`cursor-pointer transition-colors duration-300 ${copiedNsec ? 'text-green-500' : ''}`}
               >
-                <p draggable="false" className="break-all">{decryptedNsec || user.nsec}</p>
+                <p draggable="false" className="break-all">{getCachedNsec(user.pubkey) || 'Not available'}</p>
               </div>
               <p draggable="false" className="mt-[5px] font-bold">Public Key (Npub):</p>
               <div 
