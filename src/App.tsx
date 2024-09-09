@@ -16,7 +16,8 @@ import {
   setLoginState, 
   clearLoginState, 
   getLoggedInUserProfile,
-  initializeNsecCache
+  initializeNsecCache,
+  getPersistentLoginState
 } from './utils/storage';
 
 interface UserProfile {
@@ -43,8 +44,8 @@ const App = () => {
       } catch (error) {
         console.error('Error initializing nsec cache:', error);
       }
-      loadUsers();
-      checkLoginState();
+      await loadUsers();
+      await checkLoginState();
     };
 
     initialize();
@@ -56,15 +57,43 @@ const App = () => {
   };
 
   const checkLoginState = async () => {
+    const persistentState = await getPersistentLoginState();
     const loginState = await getLoginState();
-    if (loginState.isLoggedIn && loginState.loggedInUserId !== null) {
+    
+    if (persistentState && persistentState.isLoggedIn && persistentState.userId !== null) {
       const loggedInUser = await getLoggedInUserProfile();
       if (loggedInUser) {
-        handleUserSelect(loggedInUser);
+        if (loggedInUser.nsec.startsWith('nsec1') || persistentState.password) {
+          handleUserSelect(loggedInUser);
+        } else {
+          // User needs to log in
+          setCurrentPage('login');
+          setSelectedUser(loggedInUser);
+          setIsLoggedIn(false);
+        }
       } else {
         // If the logged-in user doesn't exist, clear the login state
         await clearLoginState();
+        setCurrentPage('login');
       }
+    } else if (loginState.isLoggedIn && loginState.loggedInUserId !== null) {
+      const loggedInUser = await getLoggedInUserProfile();
+      if (loggedInUser) {
+        if (loggedInUser.nsec.startsWith('nsec1')) {
+          handleUserSelect(loggedInUser);
+        } else {
+          // User needs to log in
+          setCurrentPage('login');
+          setSelectedUser(loggedInUser);
+          setIsLoggedIn(false);
+        }
+      } else {
+        // If the logged-in user doesn't exist, clear the login state
+        await clearLoginState();
+        setCurrentPage('login');
+      }
+    } else {
+      setCurrentPage('login');
     }
   };
 

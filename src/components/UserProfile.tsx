@@ -51,38 +51,36 @@ export default function UserProfile({ user, onBack, onDelete, onUserUpdate, onLo
   const [copiedNsec, setCopiedNsec] = useState(false);
   const [copiedNpub, setCopiedNpub] = useState(false);
 
-  const handleCopy = async (text: string, setCopied: (value: boolean) => void) => {
-    try {
-      await navigator.clipboard.writeText(text);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1300);
-    } catch (err) {
-      console.error('Failed to copy text: ', err);
-    }
-  };
-
   useEffect(() => {
     const initialize = async () => {
       const persistentState = await getPersistentLoginState();
       if (persistentState && persistentState.isLoggedIn && persistentState.userId === user.id) {
-        setIsLoggedIn(true);
-        let nsecToUse = user.nsec;
-        if (user.nsec.startsWith('nsec1')) {
-          nsecToUse = user.nsec;
-        } else {
-          const cachedNsec = getCachedNsec(user.pubkey);
-          if (cachedNsec) {
-            nsecToUse = cachedNsec;
-          } else if (persistentState.password) {
-            try {
-              nsecToUse = await decryptAndCacheNsec(user.nsec, persistentState.password, user.pubkey);
-            } catch (error) {
-              console.error('Failed to decrypt nsec:', error);
+        if (user.nsec.startsWith('nsec1') || persistentState.password) {
+          setIsLoggedIn(true);
+          let nsecToUse = user.nsec;
+          if (!user.nsec.startsWith('nsec1')) {
+            const cachedNsec = getCachedNsec(user.pubkey);
+            if (cachedNsec) {
+              nsecToUse = cachedNsec;
+            } else if (persistentState.password) {
+              try {
+                nsecToUse = await decryptAndCacheNsec(user.nsec, persistentState.password, user.pubkey);
+              } catch (error) {
+                console.error('Failed to decrypt nsec:', error);
+                setIsLoggedIn(false);
+              }
             }
           }
+          setUpdatedUser(prevUser => ({ ...prevUser, nsec: nsecToUse }));
+          fetchLatestUserData();
+        } else {
+          setIsLoggedIn(false);
         }
-        setUpdatedUser(prevUser => ({ ...prevUser, nsec: nsecToUse }));
+      } else if (user.nsec.startsWith('nsec1')) {
+        setIsLoggedIn(true);
         fetchLatestUserData();
+      } else {
+        setIsLoggedIn(false);
       }
     };
 
@@ -250,6 +248,16 @@ export default function UserProfile({ user, onBack, onDelete, onUserUpdate, onLo
     }
   };
 
+  const handleCopy = async (text: string, setCopied: (value: boolean) => void) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1300);
+    } catch (err) {
+      console.error('Failed to copy text: ', err);
+    }
+  };
+
   const handleLogin = async () => {
     try {
       const users = await getUserProfiles();
@@ -273,10 +281,11 @@ export default function UserProfile({ user, onBack, onDelete, onUserUpdate, onLo
           isLoggedIn: true, 
           userId: loggedInUser.id, 
           pubkey: loggedInUser.pubkey,
-          password: password  // Store the password in the persistent state
+          password: password
         });
         setUpdatedUser(prevUser => ({ ...prevUser, nsec: decryptedNsec }));
       }
+      fetchLatestUserData();
     } catch (err) {
       console.error('Login error:', err);
       setError('Invalid password');
