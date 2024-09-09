@@ -174,17 +174,23 @@ Please note that this software is provided "as is," and we assume no liability f
 <!----------------------------------------------------------------------------->
 
 ## Roadmap Before Full Release
+1. update window so it doesn't default back to userprofile if logged out
+
+1. implement nip-07 (for the love of god 😭)
+1. add approve once, approve all button and request number
+1. update permission list (site,revoke button)
+
+1. Create keys, sign into client, change profile pic, test nip65 update
+
 1. Add each language and all text remapping to i18 
 1. have users confirm all localizations
-1. implement nip-07 (for the love of god 😭)
-1. remove *nip-7 access* text, add button for revoke access, and other one i forgot
-1. add approve once, approve all button and request number
-1. Create keys, sign into client, change profile pic, test nip65 update
-1. update window so it doesn't default back to userprofile if logged out
+
 1. compile to firefox, upload to mozilla dev account
 1. compile to chrome, upload to chrome dev account
 1. compile to safari, upload to safari dev account
+
 1. optmize/organize code, comment it like a real keyboard gangster
+
 1. add compile option to remove comment, check all compile options
 <br />
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
