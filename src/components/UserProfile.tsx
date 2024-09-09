@@ -294,7 +294,7 @@ export default function UserProfile({ user, onBack, onDelete, onUserUpdate, onLo
     } catch (err) {
       console.error('Login error:', err);
       setError('Invalid password');
-      setRetryCountdown(9);
+      setRetryCountdown(5);
     }
   };
 

@@ -174,9 +174,6 @@ Please note that this software is provided "as is," and we assume no liability f
 <!----------------------------------------------------------------------------->
 
 ## Roadmap Before Full Release
-1. fix timeout on refresh
-
-
 1. implement nip-07 (for the love of god 😭)
 1. add approve once, approve all button and request number
 1. update permission list (site,revoke button)

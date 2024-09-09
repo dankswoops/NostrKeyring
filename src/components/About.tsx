@@ -93,10 +93,6 @@ export default function X({ onBack }: AboutProps) {
       <div draggable="false" className="text-center mb-[15px]">
         Always ensure you're using this extension in a secure environment, encrypt all your keys, logout of your User Profile before letting others use this device, and never share your secret keys with anyone.
       </div>
-      <div draggable="false" className="text-center mb-[15px]">
-        I decided to not add a QR scanner to move keys across browsers.
-        Even though it's anoying, the secure way to transfer keys is by eye and hand.
-      </div>
       <div draggable="false" className="text-center mb-[25px]">
         <span className='text-red-800'>Warning: </span>If you delete this extension, all your User Profile keys will be deleted too. So back your keys up!
       </div>
