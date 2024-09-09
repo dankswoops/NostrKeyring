@@ -58,9 +58,9 @@ export default function Login({ onCreateProfile, onUserSelect }: LoginProps) {
                 </svg>
               </div>
             )}
-            <div className="mx-[8px] overflow-hidden h-[70px] flex flex-col justify-center">
-              <div className="font-bold">{user.name || 'No Name Set'}</div>
-              <div className="text-xs truncate">{user.lud16 || 'No wallet address'}</div>
+            <div className="mx-[8px] overflow-hidden h-[70px] flex flex-col justify-center flex-1">
+              <div className="whitespace-nowrap font-bold truncate">{user.name || 'No Name Set'}</div>
+              <div className="whitespace-nowrap text-xs truncate">{user.lud16 || 'No wallet address'}</div>
             </div>
           </div>
         </div>

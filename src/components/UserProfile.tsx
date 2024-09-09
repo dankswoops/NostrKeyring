@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import { fetchUserDataAndRelays } from '../utils/nip65';
+import { bytesToHex } from '@noble/hashes/utils';
+import { nip19 } from '../utils/nip19';
 import {
   updateUserProfile,
   setPersistentLoginState,
@@ -103,6 +105,16 @@ export default function UserProfile({ user, onBack, onDelete, onUserUpdate, onLo
   useEffect(() => {
     checkPersistentLoginState();
   }, []);
+
+  useEffect(() => {
+    if (user.nsec.startsWith('nsec1')) {
+      const { type, data } = nip19.decode(user.nsec)
+      if (type === 'nsec') {
+        const secretKeyHex = bytesToHex(data)
+        console.log(secretKeyHex)
+      }
+    }
+  }, [user.nsec])
 
   const checkPersistentLoginState = async () => {
     const persistentState = await getPersistentLoginState();
@@ -339,8 +351,8 @@ export default function UserProfile({ user, onBack, onDelete, onUserUpdate, onLo
           )}
         </div>
         <div draggable="false" className='ml-2 w-[190px] overflow-hidden'>
-          <div className='whitespace-nowrap font-bold'>{updatedUser.name}</div>
-          <div className='whitespace-nowrap text-xs'>{updatedUser.lud16 || 'No wallet address'}</div>
+          <div className='whitespace-nowrap font-bold truncate'>{updatedUser.name}</div>
+          <div className='whitespace-nowrap text-xs truncate'>{updatedUser.lud16 || 'No wallet address'}</div>
         </div>
       </div>
       {!isLoggedIn && !user.nsec.startsWith('nsec1') && (

@@ -251,8 +251,8 @@ export default function Create({ onUserCreated, onBack }: CreateProps) {
           </div>
         )}
         <div className='ml-2 w-[190px] overflow-hidden'>
-          <div className='whitespace-nowrap font-bold'>{metadata.name || 'Unnamed'}</div>
-          <div className='whitespace-nowrap'>{metadata.lud16 || 'No wallet address'}</div>
+          <div className='whitespace-nowrap truncate font-bold'>{metadata.name || 'Unnamed'}</div>
+          <div className='whitespace-nowrap truncate'>{metadata.lud16 || 'No wallet address'}</div>
         </div>
       </div>
     );

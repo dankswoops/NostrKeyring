@@ -25,7 +25,7 @@
     {
       "matches": ["<all_urls>"],
       "js": ["content-script.js"],
-      "run_at": "document_start"
+      "run_at": "document_end"
     }
   ],
   "content_security_policy": "script-src 'self'; connect-src 'self' wss://*; object-src 'self'",
