@@ -9,7 +9,8 @@ import {
   decryptAndCacheNsec,
   getCachedNsec,
   reencryptAndUpdateNsec,
-  storeUnencryptedNsec
+  storeUnencryptedNsec,
+  clearCachedNsecAndPassword
 } from '../utils/storage';
 import Loader from './Loader';
 
@@ -37,7 +38,6 @@ export default function UserProfile({ user, onBack, onDelete, onUserUpdate, onLo
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [showPermissions, setShowPermissions] = useState(false);
   const [password, setPassword] = useState('');
-  const [decryptedNsec, setDecryptedNsec] = useState('');
   const [error, setError] = useState('');
   const [retryCountdown, setRetryCountdown] = useState(0);
   const [updatedUser, setUpdatedUser] = useState<UserType>(user);
@@ -62,18 +62,37 @@ export default function UserProfile({ user, onBack, onDelete, onUserUpdate, onLo
   };
 
   useEffect(() => {
+    const initialize = async () => {
+      const persistentState = await getPersistentLoginState();
+      if (persistentState && persistentState.isLoggedIn && persistentState.userId === user.id) {
+        setIsLoggedIn(true);
+        const cachedNsec = getCachedNsec(user.pubkey);
+        if (cachedNsec) {
+          setUpdatedUser(prevUser => ({ ...prevUser, nsec: cachedNsec }));
+        } else if (user.nsec.startsWith('nsec1')) {
+          setUpdatedUser(prevUser => ({ ...prevUser, nsec: user.nsec }));
+        } else if (persistentState.password) {
+          try {
+            const decryptedNsec = await decryptAndCacheNsec(user.nsec, persistentState.password, user.pubkey);
+            setUpdatedUser(prevUser => ({ ...prevUser, nsec: decryptedNsec }));
+          } catch (error) {
+            console.error('Failed to decrypt nsec:', error);
+          }
+        }
+        fetchLatestUserData();
+      }
+    };
+
+    initialize();
+  }, [user.id, user.pubkey, user.nsec]);
+
+  useEffect(() => {
     let timer: number | undefined;
     if (retryCountdown > 0) {
       timer = window.setTimeout(() => setRetryCountdown(retryCountdown - 1), 1000);
     }
     return () => window.clearTimeout(timer);
   }, [retryCountdown]);
-
-  useEffect(() => {
-    if (isLoggedIn) {
-      fetchLatestUserData();
-    }
-  }, [isLoggedIn]);
 
   useEffect(() => {
     checkPersistentLoginState();
@@ -178,15 +197,6 @@ export default function UserProfile({ user, onBack, onDelete, onUserUpdate, onLo
     }
   };
 
-  const handleLogout = async () => {
-    setShowNsec(false);
-    setPassword('');
-    setError('');
-    await clearPersistentLoginState();
-    setIsLoggedIn(false);
-    onLogout();
-  };
-
   const handleChangePassword = async () => {
     try {
       if (newPassword === '' && verifyNewPassword === '') {
@@ -202,6 +212,14 @@ export default function UserProfile({ user, onBack, onDelete, onUserUpdate, onLo
         return;
       } else {
         await reencryptAndUpdateNsec(user.pubkey, newPassword);
+        // Update the persistent login state with the new password
+        const persistentState = await getPersistentLoginState();
+        if (persistentState && persistentState.pubkey === user.pubkey) {
+          await setPersistentLoginState({
+            ...persistentState,
+            password: newPassword
+          });
+        }
       }
 
       // Reset state
@@ -234,19 +252,33 @@ export default function UserProfile({ user, onBack, onDelete, onUserUpdate, onLo
         setIsLoggedIn(true);
         await setPersistentLoginState({ isLoggedIn: true, userId: loggedInUser.id, pubkey: loggedInUser.pubkey });
       } else {
-        await decryptAndCacheNsec(loggedInUser.nsec, password, loggedInUser.pubkey);
+        const decryptedNsec = await decryptAndCacheNsec(loggedInUser.nsec, password, loggedInUser.pubkey);
         setIsLoggedIn(true);
         setError('');
         setShowNewPassword(false);
-        await setPersistentLoginState({ isLoggedIn: true, userId: loggedInUser.id, pubkey: loggedInUser.pubkey });
+        await setPersistentLoginState({ 
+          isLoggedIn: true, 
+          userId: loggedInUser.id, 
+          pubkey: loggedInUser.pubkey,
+          password: password  // Store the password in the persistent state
+        });
+        setUpdatedUser(prevUser => ({ ...prevUser, nsec: decryptedNsec }));
       }
-  
-      setUpdatedUser(loggedInUser);
     } catch (err) {
       console.error('Login error:', err);
       setError('Invalid password');
       setRetryCountdown(9);
     }
+  };
+
+  const handleLogout = async () => {
+    setShowNsec(false);
+    setPassword('');
+    setError('');
+    await clearPersistentLoginState();
+    clearCachedNsecAndPassword(user.pubkey);
+    setIsLoggedIn(false);
+    onLogout();
   };
   
   return (
@@ -358,7 +390,7 @@ export default function UserProfile({ user, onBack, onDelete, onUserUpdate, onLo
           </div>
           {showNsec && (
             <>
-              <p draggable="false" className='mt-[5px] italic'>Click to copy</p>
+              <p draggable="false" className='mt-[5px] italic'>Click key to copy</p>
               <p draggable="false" className="mt-[5px] font-bold">Secret Key (Nsec):</p>
               <div 
                 id="copyNsec" 

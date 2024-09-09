@@ -19,11 +19,13 @@ interface PersistentLoginState {
   isLoggedIn: boolean;
   userId: number;
   pubkey: string;
+  password?: string;
 }
 
 const isExtensionEnvironment = typeof chrome !== 'undefined' && chrome.storage;
 
 const tempNsecCache: { [pubkey: string]: string } = {};
+let tempPasswordCache: { [pubkey: string]: string } = {};
 
 const getStorage = () => {
   if (isExtensionEnvironment) {
@@ -50,11 +52,24 @@ const getStorage = () => {
 
 export const initializeNsecCache = async (): Promise<void> => {
   const users = await getUserProfiles();
-  users.forEach(user => {
-    if (user.nsec.startsWith('nsec1')) {
-      tempNsecCache[user.pubkey] = user.nsec;
+  const persistentState = await getPersistentLoginState();
+
+  if (persistentState && persistentState.isLoggedIn) {
+    const loggedInUser = users.find(user => user.id === persistentState.userId);
+    if (loggedInUser) {
+      if (loggedInUser.nsec.startsWith('nsec1')) {
+        tempNsecCache[loggedInUser.pubkey] = loggedInUser.nsec;
+      } else if (persistentState.password) {
+        try {
+          const decryptedNsec = await decryptSecretKey(loggedInUser.nsec, persistentState.password, loggedInUser.pubkey);
+          tempNsecCache[loggedInUser.pubkey] = decryptedNsec;
+          tempPasswordCache[loggedInUser.pubkey] = persistentState.password;
+        } catch (error) {
+          console.error('Failed to decrypt nsec during initialization:', error);
+        }
+      }
     }
-  });
+  }
 };
 
 export const createUserProfile = async (profileData: Omit<UserProfile, 'id'>): Promise<void> => {
@@ -143,6 +158,7 @@ export const decryptAndCacheNsec = async (encryptedNsec: string, password: strin
   try {
     const decrypted = await decryptSecretKey(encryptedNsec, password, pubkey);
     tempNsecCache[pubkey] = decrypted;
+    tempPasswordCache[pubkey] = password;  // Cache the password
     return decrypted;
   } catch (error) {
     console.error('Error decrypting nsec:', error);
@@ -154,13 +170,15 @@ export const getCachedNsec = (pubkey: string): string | null => {
   return tempNsecCache[pubkey] || null;
 };
 
-// export const clearCachedNsec = (pubkey: string): void => {
-//   delete tempNsecCache[pubkey];
-// };
+export const clearCachedNsecAndPassword = (pubkey: string): void => {
+  delete tempNsecCache[pubkey];
+  delete tempPasswordCache[pubkey];
+};
 
-// export const clearAllCachedNsecs = (): void => {
-//   Object.keys(tempNsecCache).forEach(key => delete tempNsecCache[key]);
-// };
+export const clearAllCachedNsecsAndPasswords = (): void => {
+  Object.keys(tempNsecCache).forEach(key => delete tempNsecCache[key]);
+  tempPasswordCache = {};
+};
 
 export const reencryptAndUpdateNsec = async (pubkey: string, newPassword: string): Promise<void> => {
   const cachedNsec = getCachedNsec(pubkey);
@@ -170,11 +188,33 @@ export const reencryptAndUpdateNsec = async (pubkey: string, newPassword: string
 
   const newEncryptedNsec = await encryptSecretKey(cachedNsec, newPassword, pubkey);
   await updateUserProfile({ pubkey, nsec: newEncryptedNsec });
+  
+  // Update the password in the persistent state
+  const persistentState = await getPersistentLoginState();
+  if (persistentState && persistentState.pubkey === pubkey) {
+    await setPersistentLoginState({
+      ...persistentState,
+      password: newPassword
+    });
+  }
+  
+  // Update the password in the temporary cache
+  tempPasswordCache[pubkey] = newPassword;
 };
 
 export const storeUnencryptedNsec = async (pubkey: string, nsec: string): Promise<void> => {
   tempNsecCache[pubkey] = nsec;
-  return updateUserProfile({ pubkey, nsec });
+  await updateUserProfile({ pubkey, nsec });
+  
+  // Remove the password from the persistent state
+  const persistentState = await getPersistentLoginState();
+  if (persistentState && persistentState.pubkey === pubkey) {
+    const { password, ...stateWithoutPassword } = persistentState;
+    await setPersistentLoginState(stateWithoutPassword);
+  }
+  
+  // Remove the password from the temporary cache
+  delete tempPasswordCache[pubkey];
 };
 
 export const setLoginState = async (loginState: LoginState): Promise<void> => {
@@ -199,6 +239,13 @@ export const getLoginState = async (): Promise<LoginState> => {
 };
 
 export const clearLoginState = async (): Promise<void> => {
+  const loginState = await getLoginState();
+  if (loginState.isLoggedIn && loginState.loggedInUserId !== null) {
+    const user = await getLoggedInUserProfile();
+    if (user) {
+      clearCachedNsecAndPassword(user.pubkey);
+    }
+  }
   return setLoginState({ isLoggedIn: false, loggedInUserId: null });
 };
 
@@ -234,5 +281,9 @@ export const getPersistentLoginState = async (): Promise<PersistentLoginState | 
 };
 
 export const clearPersistentLoginState = async (): Promise<void> => {
+  const persistentState = await getPersistentLoginState();
+  if (persistentState && persistentState.isLoggedIn) {
+    clearCachedNsecAndPassword(persistentState.pubkey);
+  }
   return setPersistentLoginState({ isLoggedIn: false, userId: -1, pubkey: '' });
 };
