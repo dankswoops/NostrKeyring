@@ -90,7 +90,12 @@ export default function UserProfile({ user, onBack, onDelete, onUserUpdate, onLo
   useEffect(() => {
     let timer: number | undefined;
     if (retryCountdown > 0) {
-      timer = window.setTimeout(() => setRetryCountdown(retryCountdown - 1), 1000);
+      timer = window.setTimeout(() => {
+        setRetryCountdown(retryCountdown - 1);
+        if (retryCountdown === 1) {
+          setError('');
+        }
+      }, 1000);
     }
     return () => window.clearTimeout(timer);
   }, [retryCountdown]);
