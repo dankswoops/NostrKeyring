@@ -211,7 +211,20 @@ export default function UserProfile({ user, onBack, onDelete, onUserUpdate, onLo
         setError('New passwords do not match');
         return;
       } else {
-        await reencryptAndUpdateNsec(user.pubkey, newPassword);
+        let nsecToEncrypt = updatedUser.nsec;
+        if (!nsecToEncrypt.startsWith('nsec1')) {
+          // If the current nsec is not in plain text, we need to decrypt it first
+          const cachedNsec = getCachedNsec(user.pubkey);
+          if (cachedNsec) {
+            nsecToEncrypt = cachedNsec;
+          } else {
+            // If we can't get the decrypted nsec, we can't proceed
+            throw new Error('Unable to retrieve decrypted nsec');
+          }
+        }
+  
+        await reencryptAndUpdateNsec(user.pubkey, newPassword, nsecToEncrypt);
+        
         // Update the persistent login state with the new password
         const persistentState = await getPersistentLoginState();
         if (persistentState && persistentState.pubkey === user.pubkey) {
@@ -221,7 +234,7 @@ export default function UserProfile({ user, onBack, onDelete, onUserUpdate, onLo
           });
         }
       }
-
+  
       // Reset state
       setPassword('');
       setNewPassword('');

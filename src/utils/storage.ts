@@ -180,13 +180,8 @@ export const clearAllCachedNsecsAndPasswords = (): void => {
   tempPasswordCache = {};
 };
 
-export const reencryptAndUpdateNsec = async (pubkey: string, newPassword: string): Promise<void> => {
-  const cachedNsec = getCachedNsec(pubkey);
-  if (!cachedNsec) {
-    throw new Error('Nsec not found in cache');
-  }
-
-  const newEncryptedNsec = await encryptSecretKey(cachedNsec, newPassword, pubkey);
+export const reencryptAndUpdateNsec = async (pubkey: string, newPassword: string, nsec: string): Promise<void> => {
+  const newEncryptedNsec = await encryptSecretKey(nsec, newPassword, pubkey);
   await updateUserProfile({ pubkey, nsec: newEncryptedNsec });
   
   // Update the password in the persistent state
@@ -200,6 +195,7 @@ export const reencryptAndUpdateNsec = async (pubkey: string, newPassword: string
   
   // Update the password in the temporary cache
   tempPasswordCache[pubkey] = newPassword;
+  tempNsecCache[pubkey] = nsec; // Store the unencrypted nsec in the cache
 };
 
 export const storeUnencryptedNsec = async (pubkey: string, nsec: string): Promise<void> => {
