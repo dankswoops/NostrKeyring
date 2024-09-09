@@ -32,8 +32,8 @@ interface UserProps {
 export default function UserProfile({ user, onBack, onDelete, onUserUpdate, onLogout }: UserProps) {
   const [isLoggedIn, setIsLoggedIn] = useState(user.nsec.startsWith('nsec1'));
   const [showNsec, setShowNsec] = useState(false);
-  const [copyButtonText, setCopyButtonText] = useState('Copy Nsec');
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+  const [showPermissions, setShowPermissions] = useState(false);
   const [password, setPassword] = useState('');
   const [decryptedNsec, setDecryptedNsec] = useState('');
   const [error, setError] = useState('');
@@ -46,14 +46,18 @@ export default function UserProfile({ user, onBack, onDelete, onUserUpdate, onLo
   const [newPassword, setNewPassword] = useState('');
   const [verifyNewPassword, setVerifyNewPassword] = useState('');
   const [showNewPassword, setShowNewPassword] = useState(false);
+  const [copiedNsec, setCopiedNsec] = useState(false);
+  const [copiedNpub, setCopiedNpub] = useState(false);
 
-  useEffect(() => {
-    let timer: number | undefined;
-    if (copyButtonText === 'Copied!') {
-      timer = window.setTimeout(() => setCopyButtonText('Copy Nsec'), 3000);
+  const handleCopy = async (text: string, setCopied: (value: boolean) => void) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1300);
+    } catch (err) {
+      console.error('Failed to copy text: ', err);
     }
-    return () => window.clearTimeout(timer);
-  }, [copyButtonText]);
+  };
 
   useEffect(() => {
     let timer: number | undefined;
@@ -121,32 +125,49 @@ export default function UserProfile({ user, onBack, onDelete, onUserUpdate, onLo
     }
   };
 
-  const toggleNsec = () => {
+  const closeAllElements = () => {
     setShowDeleteConfirmation(false);
-    setShowNsec(!showNsec);
-  };
-
-  const copyNsec = () => {
-    navigator.clipboard.writeText(decryptedNsec).then(() => {
-      setShowDeleteConfirmation(false);
-      setCopyButtonText('Copied!');
-    }, (err) => {
-      console.error('Could not copy text: ', err);
-      setShowDeleteConfirmation(false);
-      setCopyButtonText('Failed');
-    });
+    setShowChangePassword(false);
+    setShowNsec(false);
+    setShowPermissions(false);
   };
 
   const handleDeleteClick = () => {
-    setShowDeleteConfirmation(true);
-    setDeleteConfirmName('');
-    setDeleteError('');
+    if (showDeleteConfirmation) {
+      closeAllElements();
+    } else {
+      closeAllElements();
+      setShowDeleteConfirmation(true);
+      setDeleteConfirmName('');
+      setDeleteError('');
+    }
   };
 
-  const handleCancelDelete = () => {
-    setShowDeleteConfirmation(false);
-    setDeleteConfirmName('');
-    setDeleteError('');
+  const handleChangePasswordClick = () => {
+    if (showChangePassword) {
+      closeAllElements();
+    } else {
+      closeAllElements();
+      setShowChangePassword(true);
+    }
+  };
+
+  const handleShowKeysClick = () => {
+    if (showNsec) {
+      closeAllElements();
+    } else {
+      closeAllElements();
+      setShowNsec(true);
+    }
+  };
+
+  const handlePermissionsClick = () => {
+    if (showPermissions) {
+      closeAllElements();
+    } else {
+      closeAllElements();
+      setShowPermissions(true);
+    }
   };
 
   const handleConfirmDelete = () => {
@@ -344,14 +365,14 @@ export default function UserProfile({ user, onBack, onDelete, onUserUpdate, onLo
         <>
           <div className='flex gap-[5px] my-[5px]'>
             <button
-              className="text-white h-[40px] w-[126px] bg-[#C32F2F] rounded-tl"
+              className={`text-white h-[40px] w-[126px] ${showDeleteConfirmation} bg-[#C32F2F] rounded-tl`}
               onClick={handleDeleteClick}
             >
-              Delete User
+              {showDeleteConfirmation ? 'Cancel' : 'Delete User'}
             </button>
             <button
               className="text-white h-[40px] w-[126px] bg-[#45A049] rounded-tr"
-              onClick={() => setShowChangePassword(!showChangePassword)}
+              onClick={handleChangePasswordClick}
             >
               {showChangePassword ? 'Cancel' : 'Change Pass'}
             </button>
@@ -359,31 +380,42 @@ export default function UserProfile({ user, onBack, onDelete, onUserUpdate, onLo
           <div className='flex gap-[5px]'>
             <button
               className="text-white h-[40px] w-[126px] bg-[#103FF0] rounded-bl"
-              onClick={toggleNsec}
+              onClick={handleShowKeysClick}
             >
-              {showNsec ? 'Hide Nsec' : 'Show Nsec'}
+              {showNsec ? 'Cancel' : 'Show Keys'}
             </button>
             <button
               className="text-white h-[40px] w-[126px] bg-yellow-600 rounded-br"
-              onClick={copyNsec}
+              onClick={handlePermissionsClick}
             >
-              {copyButtonText}
+              {showPermissions ? 'Cancel' : 'Permissions'}
             </button>
           </div>
           {showNsec && (
             <>
-              <p draggable="false" className="mt-[20px] font-bold">Secret Key (Nsec):</p>
-              <p draggable="false" className="break-all mt-[5px]">{decryptedNsec || user.nsec}</p>
+              <p draggable="false" className='mt-[5px] italic'>Click to copy</p>
+              <p draggable="false" className="mt-[5px] font-bold">Secret Key (Nsec):</p>
+              <div 
+                id="copyNsec" 
+                onClick={() => handleCopy(decryptedNsec || user.nsec, setCopiedNsec)}
+                className={`cursor-pointer transition-colors duration-300 ${copiedNsec ? 'text-green-500' : ''}`}
+              >
+                <p draggable="false" className="break-all">{decryptedNsec || user.nsec}</p>
+              </div>
+              <p draggable="false" className="mt-[5px] font-bold">Public Key (Npub):</p>
+              <div 
+                id="copyNpub" 
+                onClick={() => handleCopy(user.npub, setCopiedNpub)}
+                className={`cursor-pointer transition-colors duration-300 ${copiedNpub ? 'text-green-500' : ''}`}
+              >
+                <p draggable="false" className="break-all">{user.npub}</p>
+              </div>
             </>
           )}
           {showDeleteConfirmation && (
-            <div className="flex flex-col w-full">
-              <button
-                className="text-white h-[40px] mt-[20px] mb-[10px] w-full bg-[#757575] rounded"
-                onClick={handleCancelDelete}
-              >
-                Cancel
-              </button>
+            <div className="flex flex-col w-full mt-[10px]">
+              <div draggable="false" className='text-center mb-[10px] italic'>Are you sure?</div>
+              <div draggable="false" className='text-center mb-[10px] italic'>This is permanent</div>
               <div draggable="false" className='text-center mb-[10px] italic'>Enter username to delete</div>
               <div className="flex w-full mb-[10px]">
                 <input
@@ -452,6 +484,11 @@ export default function UserProfile({ user, onBack, onDelete, onUserUpdate, onLo
               >
                 Update Password
               </button>
+            </div>
+          )}
+          {showPermissions && (
+            <div className="w-full mt-4">
+              <p>Permissions</p>
             </div>
           )}
         </>
