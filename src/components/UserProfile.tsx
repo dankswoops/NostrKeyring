@@ -66,19 +66,22 @@ export default function UserProfile({ user, onBack, onDelete, onUserUpdate, onLo
       const persistentState = await getPersistentLoginState();
       if (persistentState && persistentState.isLoggedIn && persistentState.userId === user.id) {
         setIsLoggedIn(true);
-        const cachedNsec = getCachedNsec(user.pubkey);
-        if (cachedNsec) {
-          setUpdatedUser(prevUser => ({ ...prevUser, nsec: cachedNsec }));
-        } else if (user.nsec.startsWith('nsec1')) {
-          setUpdatedUser(prevUser => ({ ...prevUser, nsec: user.nsec }));
-        } else if (persistentState.password) {
-          try {
-            const decryptedNsec = await decryptAndCacheNsec(user.nsec, persistentState.password, user.pubkey);
-            setUpdatedUser(prevUser => ({ ...prevUser, nsec: decryptedNsec }));
-          } catch (error) {
-            console.error('Failed to decrypt nsec:', error);
+        let nsecToUse = user.nsec;
+        if (user.nsec.startsWith('nsec1')) {
+          nsecToUse = user.nsec;
+        } else {
+          const cachedNsec = getCachedNsec(user.pubkey);
+          if (cachedNsec) {
+            nsecToUse = cachedNsec;
+          } else if (persistentState.password) {
+            try {
+              nsecToUse = await decryptAndCacheNsec(user.nsec, persistentState.password, user.pubkey);
+            } catch (error) {
+              console.error('Failed to decrypt nsec:', error);
+            }
           }
         }
+        setUpdatedUser(prevUser => ({ ...prevUser, nsec: nsecToUse }));
         fetchLatestUserData();
       }
     };
@@ -201,10 +204,7 @@ export default function UserProfile({ user, onBack, onDelete, onUserUpdate, onLo
     try {
       if (newPassword === '' && verifyNewPassword === '') {
         // User wants to remove password
-        const cachedNsec = getCachedNsec(user.pubkey);
-        if (!cachedNsec) {
-          throw new Error('Nsec not found in cache');
-        }
+        const cachedNsec = getCachedNsec(user.pubkey) || user.nsec;
         await storeUnencryptedNsec(user.pubkey, cachedNsec);
         setUpdatedUser(prevUser => ({ ...prevUser, nsec: cachedNsec }));
       } else if (newPassword !== verifyNewPassword) {
@@ -394,10 +394,10 @@ export default function UserProfile({ user, onBack, onDelete, onUserUpdate, onLo
               <p draggable="false" className="mt-[5px] font-bold">Secret Key (Nsec):</p>
               <div 
                 id="copyNsec" 
-                onClick={() => handleCopy(getCachedNsec(user.pubkey) || '', setCopiedNsec)}
+                onClick={() => handleCopy(updatedUser.nsec, setCopiedNsec)}
                 className={`cursor-pointer transition-colors duration-300 ${copiedNsec ? 'text-green-500' : ''}`}
               >
-                <p draggable="false" className="break-all">{getCachedNsec(user.pubkey) || 'Not available'}</p>
+                <p draggable="false" className="break-all">{updatedUser.nsec || 'Not available'}</p>
               </div>
               <p draggable="false" className="mt-[5px] font-bold">Public Key (Npub):</p>
               <div 
