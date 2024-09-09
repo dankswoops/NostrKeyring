@@ -12,7 +12,7 @@ export default function X({ onAboutClick, isLoggedIn }: HeaderProps) {
     <>
       {/* HEADER */}
       <div 
-        className="w-full h-[45px] bg-[#1D1F31] shadow-lg shadow-[#111F31]/50 flex gap-3 items-center justify-center font-bold italic rounded-t-lg cursor-pointer"
+        className={`w-full h-[45px] bg-[#1D1F31] shadow-lg shadow-[#111F31]/50 flex gap-3 items-center justify-center font-bold italic rounded-t-lg ${isLoggedIn ? '' : 'cursor-pointer'}`}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         onClick={() => !isLoggedIn && onAboutClick()}
