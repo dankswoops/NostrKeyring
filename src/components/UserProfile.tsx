@@ -111,6 +111,7 @@ export default function UserProfile({ user, onBack, onDelete, onUserUpdate, onLo
       const { type, data } = nip19.decode(user.nsec)
       if (type === 'nsec') {
         const secretKeyHex = bytesToHex(data)
+        console.log(user.pubkey)
         console.log(secretKeyHex)
       }
     }
