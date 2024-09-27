@@ -56,18 +56,18 @@ export default function X({ onBack }: AboutProps) {
   };
 
   return (
-    <div className="flex flex-col mx-[20px] items-center">
+    <div id='about'>
       <button
-        className="text-white h-[40px] w-[150px] bg-gradient-to-b from-[#9339F4] to-[#105FB0] rounded mt-[25px] mb-[20px]"
+        id='aboutbutton'
         onClick={onBack}
       >
         {t('back')}
       </button>
-      <div className="mb-[20px]">
+      <div id='mb20'>
         <select
           value={i18n.language}
           onChange={handleLanguageChange}
-          className="indent-[1px] rounded border text-black border-gray-300 h-[40px] w-[150px] flex items-center"
+          id='language'
         >
           <option value="en">English</option>
           <option value="zh">中文</option>
@@ -83,23 +83,24 @@ export default function X({ onBack }: AboutProps) {
           <option value="de">Deutsch</option>
         </select>
       </div>
-      <div draggable="false" className="text-center mb-[15px]">
+      <div draggable="false" className="mb15">
         This extension manages your NOSTR secret keys. 
       </div>
-      <div draggable="false" className="text-center mb-[15px]">
+      <div draggable="false" className="mb15">
         For security, you should refrain from copying any secret key into your clipboard and try to view the raw key as little as possible. 
         Nostr keys cannot be reset, so if your key gets leaked, the nsec is compromised and any connected funds will likely get rugged.
       </div>
-      <div draggable="false" className="text-center mb-[15px]">
+      <div draggable="false" className="mb15">
         Always ensure you're using this extension in a secure environment, encrypt all your keys, logout of your User Profile before letting others use this device, and never share your secret keys with anyone.
       </div>
-      <div draggable="false" className="text-center mb-[25px]">
-        <span className='text-red-800'>Warning: </span>If you delete this extension, all your User Profile keys will be deleted too. So back your keys up!
+      <div draggable="false" className="mb25">
+        <span id='aboutred'>Warning: </span>
+        If you delete this extension, all your User Profile keys will be deleted too. So back your keys up!
       </div>
-      <div draggable="false" className='text-center'>
+      <div draggable="false" id='aboutcenter'>
         Bugs, Suggestions, or Zaps?
       </div>
-      <div id="author" onClick={handleAuthorClick} className='mb-[25px] text-blue-400 hover:text-blue-500 active:text-blue-600 underline cursor-pointer'>
+      <div id="author" onClick={handleAuthorClick}>
         <span draggable="false">{authorText}</span>
       </div>
       <div draggable="false">
@@ -107,11 +108,13 @@ export default function X({ onBack }: AboutProps) {
       </div>
       <a 
         href="https://github.com/dankswoops/NostrKeyring"
-        className="mb-[30px] text-blue-400 hover:text-blue-500 active:text-blue-600 underline cursor-pointer"
+        id='repo'
         rel="noopener noreferrer me" 
         target="_blank"
       >
-        <span draggable="false">Github Repo</span>
+        <span draggable="false">
+          Github Repo
+        </span>
       </a>
     </div>
   );

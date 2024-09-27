@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Import Backup</title>
+</head>
+<body>
+  <input type="file" id="fileInput" accept=".json">
+  <script src="browser-polyfill.js"></script>
+  <script>
+    document.getElementById('fileInput').addEventListener('change', (event) => {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const fileContent = e.target.result;
+          // Send the file content back to the main extension
+          browser.runtime.sendMessage({
+            type: 'fileSelected',
+            fileContent: fileContent
+          });
+        };
+        reader.readAsText(file);
+      }
+    });
+
+    // Automatically open file dialog when the page loads
+    window.addEventListener('load', () => {
+      document.getElementById('fileInput').click();
+    });
+  </script>
+</body>
+</html>

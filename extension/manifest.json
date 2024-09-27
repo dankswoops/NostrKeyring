@@ -1,0 +1,30 @@
+{
+  "manifest_version": 3,
+  "name": "Nostr Key Manager",
+  "version": "1.0.0",
+  "description": "A secure Nostr key manager for multiple browsers",
+  "action": {
+    "default_title": "Nostr Profile Key Manager",
+    "default_popup": "popup.html"
+  },
+  "permissions": [
+    "storage",
+    "activeTab",
+    "tabs"
+  ],
+  "background": {
+    "scripts": ["background.js"],
+     "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["browser-polyfill.js", "content.js"],
+      "run_at": "document_end"
+    }
+  ],
+  "web_accessible_resources": [{
+    "resources": ["import.html"],
+    "matches": ["<all_urls>"]
+  }]
+}

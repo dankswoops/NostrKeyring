@@ -1,4 +1,4 @@
-import './Style.css';
+import './App.css';
 import i18n from './utils/i18next';
 import { I18nextProvider } from 'react-i18next';
 import React, { useState, useEffect } from 'react';
@@ -153,9 +153,9 @@ const App = () => {
   };
 
   return (
-    <div className='h-[550px] w-[300px] rounded-lg border-2 overflow-hidden flex flex-col'>
+    <div id='app'>
       <Header onAboutClick={handleAboutClick} isLoggedIn={isLoggedIn} />
-      <div className='flex-1 overflow-y-auto'>
+      <div id='scroll'>
         {currentPage === 'login' && !isLoggedIn && (
           <Login onCreateProfile={handleCreateProfile} onUserSelect={handleUserSelect} />
         )}

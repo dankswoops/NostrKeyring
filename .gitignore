@@ -1,3 +1,6 @@
 package-lock.json
 node_modules/
 compiled/
+extension/nostr-tools.js
+extension/App.js
+extension/App.css

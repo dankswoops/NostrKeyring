@@ -4,9 +4,9 @@ interface LoaderProps {
 
 export default function X({ size = 70 }: LoaderProps) {
   return (
-    <div className="relative" style={{ width: size, height: size }}>
-      <div className="absolute inset-0">
-        <div id="loader" className="w-full h-full rounded-full border-4 border-purple-600"></div>
+    <div id='reloader' style={{ width: size, height: size }}>
+      <div id='abloader'>
+        <div id='loader'></div>
       </div>
     </div>
   );

@@ -196,150 +196,150 @@ export default function Create({ onUserCreated, onBack }: CreateProps) {
 
   const renderMetadata = () => {
     if (isLoading) {
-      return <div draggable="false" className="text-center my-4">Loading user data...</div>;
+      return <div draggable='false' id='createisloading'>Loading user data...</div>;
     }
 
     if (error) {
-      return <div draggable="false" className="text-red-500 text-center my-4">{error}</div>;
+      return <div draggable='false' id='createerror'>{error}</div>;
     }
 
     if (!metadata) {
       return (
         <>
-          <div draggable="false" className="text-center mb-[15px]">No user data available</div>
+          <div draggable='false' id='createnouserdata'>No user data available</div>
           <button
-            className="text-white h-[40px] w-[150px] bg-gradient-to-b from-[#9339F4] to-[#105FB0] rounded mb-[20px]"
+            id='createexport'
             onClick={handleExport}
           >
             Export Backup
           </button>
-          <label className="text-white h-[40px] w-[150px] bg-gradient-to-b from-[#9339F4] to-[#105FB0] rounded flex items-center justify-center cursor-pointer">
+          <label id='createimport'>
             <input
-              type="file"
-              accept=".json"
+              type='file'
+              accept='.json'
               onChange={handleImport}
-              className="hidden"
+              className='hidden'
             />
-            <span draggable="false">Import Backup</span>
+            <span draggable='false'>Import Backup</span>
           </label>
-          <div draggable="false" className="text-sm text-center mt-[15px]">
+          <div draggable='false' id='createporttext'>
             <p>Please select the 'nostr_keyring_backup.json' file from your download folder.</p>
             <p>You may need to navigate to find this file on your device.</p>
           </div>
           {showImportStatus && (
-            <div draggable="false" className="text-center mt-[15px] text-red-500 font-bold">{importStatus}</div>
+            <div draggable='false' id='createstatus'>{importStatus}</div>
           )}
         </>
       );
     };
 
     return (
-      <div draggable="false" className="mb-[15px] flex items-center">
+      <div draggable='false' id='createphoto'>
         {metadata.picture ? (
-          <div className="w-14 h-14 rounded-full overflow-hidden">
+          <div id='createphotochild'>
             <img 
               src={metadata.picture} 
-              alt="User" 
-              className="w-full h-full object-cover"
+              alt='User' 
+              id='createphotosize'
             />
           </div>
         ) : (
-          <div draggable="false">
-            <svg className="w-14 h-14" viewBox="0 0 52 52" xmlns="http://www.w3.org/2000/svg">
-              <path fill="#444444" d="M7.28181 41.0223C10.2003 39.8377 15.6033 37.7566 19.6444 36.85V34.7365C18.6589 33.5244 17.8956 31.3877 17.5446 28.7916C16.8769 28.1679 16.2208 27.065 15.7892 25.7263C15.117 23.6414 15.221 21.7021 15.9858 21.1263C15.9223 20.4163 15.8889 19.6789 15.8889 18.9222C15.8889 18.5928 15.8952 18.267 15.9076 17.9455C15.9167 17.7091 15.9291 17.475 15.9447 17.2435C15.7198 16.5345 15.6 15.79 15.6 15.0222C15.6 10.2358 20.2562 6.35556 26 6.35556C31.7438 6.35556 36.4 10.2358 36.4 15.0222C36.4 15.79 36.2802 16.5345 36.0552 17.2435C36.072 17.4932 36.0852 17.7459 36.0945 18.0015C36.1055 18.3048 36.1111 18.6119 36.1111 18.9222C36.1111 19.6789 36.0777 20.4163 36.0142 21.1263C36.779 21.7021 36.883 23.6414 36.2108 25.7263C35.7792 27.065 35.1231 28.1679 34.4554 28.7916C34.1044 31.3877 33.3411 33.5244 32.3556 34.7365V36.85C36.3967 37.7566 41.7997 39.8377 44.7182 41.0223C48.0227 36.9101 50 31.686 50 26C50 12.7452 39.2548 2 26 2C12.7452 2 2 12.7452 2 26C2 31.686 3.9773 36.9101 7.28181 41.0223ZM5.36405 41.8185C1.99977 37.4363 0 31.9517 0 26C0 11.6406 11.6406 0 26 0C40.3594 0 52 11.6406 52 26C52 32.2822 49.7719 38.0441 46.0629 42.5384C41.2941 48.3168 34.0772 52 26 52C25.9439 52 25.8879 51.9998 25.8319 51.9995C17.4926 51.9467 10.0849 47.9679 5.36405 41.8185Z"/>
+          <div draggable='false'>
+            <svg id='createfallback' viewBox='0 0 52 52' xmlns='http://www.w3.org/2000/svg'>
+              <path fill='#444444' d='M7.28181 41.0223C10.2003 39.8377 15.6033 37.7566 19.6444 36.85V34.7365C18.6589 33.5244 17.8956 31.3877 17.5446 28.7916C16.8769 28.1679 16.2208 27.065 15.7892 25.7263C15.117 23.6414 15.221 21.7021 15.9858 21.1263C15.9223 20.4163 15.8889 19.6789 15.8889 18.9222C15.8889 18.5928 15.8952 18.267 15.9076 17.9455C15.9167 17.7091 15.9291 17.475 15.9447 17.2435C15.7198 16.5345 15.6 15.79 15.6 15.0222C15.6 10.2358 20.2562 6.35556 26 6.35556C31.7438 6.35556 36.4 10.2358 36.4 15.0222C36.4 15.79 36.2802 16.5345 36.0552 17.2435C36.072 17.4932 36.0852 17.7459 36.0945 18.0015C36.1055 18.3048 36.1111 18.6119 36.1111 18.9222C36.1111 19.6789 36.0777 20.4163 36.0142 21.1263C36.779 21.7021 36.883 23.6414 36.2108 25.7263C35.7792 27.065 35.1231 28.1679 34.4554 28.7916C34.1044 31.3877 33.3411 33.5244 32.3556 34.7365V36.85C36.3967 37.7566 41.7997 39.8377 44.7182 41.0223C48.0227 36.9101 50 31.686 50 26C50 12.7452 39.2548 2 26 2C12.7452 2 2 12.7452 2 26C2 31.686 3.9773 36.9101 7.28181 41.0223ZM5.36405 41.8185C1.99977 37.4363 0 31.9517 0 26C0 11.6406 11.6406 0 26 0C40.3594 0 52 11.6406 52 26C52 32.2822 49.7719 38.0441 46.0629 42.5384C41.2941 48.3168 34.0772 52 26 52C25.9439 52 25.8879 51.9998 25.8319 51.9995C17.4926 51.9467 10.0849 47.9679 5.36405 41.8185Z'/>
             </svg>
           </div>
         )}
-        <div className='ml-2 w-[190px] overflow-hidden'>
-          <div className='whitespace-nowrap truncate font-bold'>{metadata.name || 'Unnamed'}</div>
-          <div className='whitespace-nowrap truncate'>{metadata.lud16 || 'No wallet address'}</div>
+        <div id='createusertext'>
+          <div id='createusername'>{metadata.name || 'Unnamed'}</div>
+          <div id='createuserwallet'>{metadata.lud16 || 'No wallet address'}</div>
         </div>
       </div>
     );
   };
 
   return (
-    <div className="flex flex-col items-center mb-[20px] mx-[20px]">
+    <div id='create'>
       <button
-        className="text-white h-[40px] w-[150px] bg-gradient-to-b from-[#9339F4] to-[#105FB0] rounded mt-[25px] mb-[20px]"
+        id='createback'
         onClick={onBack}
       >
         Back
       </button>
-      <div className="flex w-full mb-[15px]">
+      <div id='creatensec'>
         <input
-          className={`p-2 border rounded-l w-full outline-none ${isValidKey ? 'text-green-500' : 'text-red-500'}`}
-          type="text"
-          placeholder="Paste or Create NSec"
+          id='createisvalid'
+          className={`font-bold ${isValidKey ? 'text-green-500' : 'text-red-500'}`}
+          type='text'
+          placeholder='Paste or Create NSec'
           value={nsec}
           onChange={handleInputChange}
         />
         <button
-          className="rounded-r bg-white w-[50px] flex justify-center items-center"
+          id='creategenerate'
           onClick={handleCreateNsec}
         >
-          <div draggable="false">
-            <svg className='w-6 h-6' viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
-              <path fill="#699f4c" transform="translate(-1050 -210)" d="M1080,270a30,30,0,1,1,30-30A30,30,0,0,1,1080,270Zm14-34h-10V226a4,4,0,0,0-8,0v10h-10a4,4,0,0,0,0,8h10v10a4,4,0,0,0,8,0V244h10A4,4,0,0,0,1094,236Z"/>
+          <div draggable='false'>
+            <svg id='createsize' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'>
+              <path fill='#699f4c' transform='translate(-1050 -210)' d='M1080,270a30,30,0,1,1,30-30A30,30,0,0,1,1080,270Zm14-34h-10V226a4,4,0,0,0-8,0v10h-10a4,4,0,0,0,0,8h10v10a4,4,0,0,0,8,0V244h10A4,4,0,0,0,1094,236Z'/>
             </svg>
           </div>
         </button>
       </div>
       {renderMetadata()}
       {showEncryptOptions && !showWarning && !isLoading && (
-        <div className="w-full">
-          <div className="flex items-center mb-2">
+        <div className='createwfull'>
+          <div id='createboxencrypt'>
             <input
-              type="checkbox"
-              id="encryptKey"
+              type='checkbox'
+              id='encryptKey'
               checked={encryptKey}
               onChange={(e) => setEncryptKey(e.target.checked)}
-              className="mr-2"
+              className='mr-2'
             />
-            <label htmlFor="encryptKey" className='w-full'><span draggable="false">Encrypt Key</span></label>
+            <label htmlFor='encryptKey' className='createwfull'><span draggable='false'>Encrypt Key</span></label>
           </div>
-          <div className="flex items-center mb-4">
+          <div id='createboxdontencrypt'>
             <input
-              type="checkbox"
-              id="dontEncrypt"
+              type='checkbox'
+              id='dontEncrypt'
               checked={!encryptKey}
               onChange={(e) => setEncryptKey(!e.target.checked)}
-              className="mr-2"
+              className='mr-2'
             />
-            <label htmlFor="dontEncrypt" className='w-full'><span draggable="false">Don't Encrypt</span></label>
+            <label htmlFor='dontEncrypt' className='createwfull'><span draggable='false'>Don't Encrypt</span></label>
           </div>
           {encryptKey && (
             <>
               <input
-                type={showPassword ? "text" : "password"}
-                placeholder="Enter password"
+                type={showPassword ? 'text' : 'password'}
+                placeholder='Enter password'
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="p-2 border rounded w-full mb-2 outline-none text-black"
+                id='createinput1'
               />
               <input
-                type={showPassword ? "text" : "password"}
-                placeholder="Verify password"
+                type={showPassword ? 'text' : 'password'}
+                placeholder='Verify password'
                 value={verifyPassword}
                 onChange={(e) => setVerifyPassword(e.target.value)}
-                className="p-2 border rounded w-full mb-4 outline-none text-black"
+                id='createinput2'
               />
-              <div className="flex items-center mb-4">
+              <div id='createshowpass'>
                 <input
-                  type="checkbox"
-                  id="showPassword"
+                  type='checkbox'
+                  id='showPassword'
                   checked={showPassword}
                   onChange={(e) => setShowPassword(e.target.checked)}
-                  className="mr-2"
+                  className='mr-2'
                 />
-                <label htmlFor="showPassword" className='w-full'><span draggable="false">Show Password</span></label>
+                <label htmlFor='showPassword' className='w-full'><span draggable='false'>Show Password</span></label>
               </div>
             </>
           )}
           <button
-            className={`text-white h-[40px] w-full bg-gradient-to-b from-[#9339F4] to-[#105FB0] rounded ${
-              (!encryptKey || (encryptKey && passwordsMatch && password !== '')) && metadata ? '' : 'opacity-50 cursor-not-allowed'
-            }`}
+            id='createcreate'
+            className={`${(!encryptKey || (encryptKey && passwordsMatch && password !== '')) && metadata ? '' : 'opacity-50 cursor-not-allowed'}`}
             onClick={handleCreateProfile}
             disabled={encryptKey && (!passwordsMatch || password === '') || !metadata}
           >
@@ -348,18 +348,18 @@ export default function Create({ onUserCreated, onBack }: CreateProps) {
         </div>
       )}
       {showWarning && (
-        <div className="mt-4 w-full bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4">
-          <div draggable="false" className="font-bold">WARNING</div>
-          <p draggable="false">You should set a password. Are you sure you want to continue without encryption?</p>
-          <div className="mt-4 flex justify-end space-x-4">
+        <div id='createwarning'>
+          <div draggable='false' className='font-bold'>WARNING</div>
+          <p draggable='false'>You should set a password. Are you sure you want to continue without encryption?</p>
+          <div id='createwarn'>
             <button
-              className="px-4 py-2 bg-gray-300 rounded w-full"
+              id='createwarnfalse'
               onClick={() => setShowWarning(false)}
             >
               No
             </button>
             <button
-              className="px-4 py-2 bg-red-500 text-white rounded w-full"
+              id='createwarntrue'
               onClick={() => handleWarningResponse(true)}
             >
               Yes

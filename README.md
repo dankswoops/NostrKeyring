@@ -25,7 +25,7 @@
 <!----------------------------------------------------------------------------->
 <div align="center">
   <a href="#">
-    <img src="https://github.com/dankswoops/NostrKeyring/blob/main/public/nostrkeyring.svg" alt="Logo" width="80" height="80">
+    <img src="https://github.com/dankswoops/NostrKeyring/blob/main/icons/nostrkeyring.svg" alt="Logo" width="80" height="80">
   </a>
   <h3 align="center">Nostr Keyring</h3>
   <p align="center">
@@ -115,19 +115,17 @@ When it's time to un-encrypt the Nsec, if the result doesn't start with "nsec1" 
 
 ## How To Compile, Test, & Push
 To Dev:   
-1. Open in your editor, VSCodium is legit
+1. Open in your editor, [https://vscodium.com/](VSCodium) is legit
 2. You'll need NodeJS `https://nodejs.org`
-3. On root in IDE > Open Intergated Terminal > `npm i` then `npm start`
+3. On root in IDE > Open Intergated Terminal > `npm i` then `npm start`, this runs ESBuild using `./build.js`
 
 To Build:   
 1. On root in IDE > Open Intergated Terminal > `npm i` then `npm run build`
-2. Open folder `Root`>`src`>`compiled`>`manifest.json`
+2. Open folder `Root`>`extension`>`manifest.json`
 3. Go into browser URL:
 3. - firefox: `about:debugging#/runtime/this-firefox`
-3. - chrome: ``
+3. - chrome: `chrome://extensions/`, enable dev mode, drop the extension folder   
 3. - safari: ``
-4. Load Temporary Add-on...
-5. Add `manifest.json` and check your extension to open
 
 To Push:   
 1. git add .

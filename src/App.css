@@ -1,0 +1,711 @@
+body {background: #11131F; color: #C4C8CB}
+/* REMOVE SCROLL */
+._disableScroll{overflow: hidden !important}
+*::-webkit-scrollbar{width:0px} /* Chrome, Safari, & Opera */
+*{scrollbar-width: none; /* Firefox */ -ms-overflow-style: none /* IE & Edge */}
+/* REMOVE DRAG, HIGHLIGHT, & POINTER */
+[draggable=false]{
+  user-select: none; /* Prevent text selection */
+  pointer-events: none; /* Disable pointer events */
+  -o-user-select: none; /* Opera */
+  -ms-user-select: none; /* Internet Explorer & Edge */
+  -moz-user-select: none; /* Firefox */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -webkit-user-select: none; /* Safari */
+  -webkit-touch-callout: none; /* Prevent iOS touch callout */
+  -webkit-tap-highlight-color: transparent; /* Remove tap highlight */
+  -webkit-tap-highlight-color: rgba(0,0,0,0) /* Remove tap highlight for older WebKit */
+}
+*, ::before, ::after {
+  box-sizing: border-box;
+  border-width: 0;
+  margin: 0;
+  border-style: solid;
+  border-color: theme('borderColor.DEFAULT', currentColor);
+}
+html {
+  -moz-tab-size: 4;
+  tab-size: 4;
+  line-height: 1.5;
+  -webkit-text-size-adjust: 100%;
+}
+body {
+  line-height: inherit;
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+/* APP.TSX */
+#app{
+  height: 550px;
+  width: 300px;
+  border-radius: 0.5rem;
+  border-width: 2px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column
+}
+#scroll{
+  flex: 1 1 0%;
+  overflow-y: auto
+}
+/* HEADER.TSX */
+#header{
+  width: 100%;
+  height: 45px;
+  background-color: #1D1F31;
+  box-shadow: 0 4px 10px rgba(17, 31, 49, 0.5);
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-style: italic;
+  border-top-left-radius: 0.375rem;
+  border-top-right-radius: 0.375rem
+}
+#logo{
+  margin-top: 2px;
+  height: 20px;
+  width: 20px
+}
+#title{
+  color: white;
+  width: 180px;
+  display: flex;
+  justify-content: center
+}
+#keyring{
+  margin-top: 4px;
+  height: 19px;
+  width: 19px
+}
+/* ABOUT.TSX */
+#about{
+  display: flex;
+  flex-direction: column;
+  margin-left: 20px;
+  margin-right: 20px;
+  align-items: center
+}
+#aboutbutton{
+  color: white;
+  height: 40px;
+  width: 150px;
+  background: linear-gradient(to bottom, #9339F4, #105FB0);
+  border-radius: 0.375rem;
+  margin-top: 25px;
+  margin-bottom: 20px
+}
+#mb20{
+  margin-bottom: 20px
+}
+#language{
+  text-indent: 1px;
+  border-radius: 0.375rem;
+  border: 1px solid #D1D5DB;
+  color: black;
+  height: 40px;
+  width: 150px;
+  display: flex;
+  align-items: center
+}
+.mb15{
+  text-align: center;
+  margin-bottom: 15px
+}
+.mb25{
+  text-align: center;
+  margin-bottom: 25px
+}
+#aboutcenter{
+  text-align: center
+}
+#aboutred{
+  color: #9B1C30
+}
+#author{
+  margin-bottom: 25px;
+  color: #60A5FA;
+  text-decoration: underline;
+  cursor: pointer
+}
+#author:hover {
+  color: #3B82F6
+}
+#author:active {
+  color: #1D4ED8
+}
+#repo{
+  margin-bottom: 30px;
+  color: #60A5FA;
+  text-decoration: underline;
+  cursor: pointer
+}
+#repo:hover {
+  color: #3B82F6
+}
+#repo:active {
+  color: #1D4ED8
+}
+/* LOGIN.TSX */
+#login{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+  margin-left: 20px;
+  margin-right: 20px
+}
+#loginbutton{
+  color: white;
+  height: 40px;
+  width: 150px;
+  background: linear-gradient(to bottom, #9339F4, #105FB0);
+  border-radius: 0.375rem;
+  margin-top: 25px
+}
+#loginuser{
+  margin-left: 20px;
+  margin-right: 20px;
+  margin-top: 20px;
+  border-radius: 9999px;
+  width: 100%;
+  cursor: pointer
+}
+#loginuser:hover {
+  filter: brightness(1.05);
+  color: white
+}
+#loginuserchild{
+  display: flex;
+  width: 100%
+}
+#loginphoto{
+  height: 70px;
+  width: 70px;
+  border-radius: 9999px;
+  overflow: hidden
+}
+#loginphotochild{
+  width: 100%;
+  height: 100%;
+  object-fit: cover
+}
+#loginphotoalt{
+  height: 70px;
+  width: 70px
+}
+#logintext{
+  margin-left: 8px;
+  margin-right: 8px;
+  overflow: hidden;
+  height: 70px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1
+}
+#logintextname{
+  white-space: nowrap;
+  font-weight: bold;
+  overflow: hidden;
+  text-overflow: ellipsis
+}
+#logintextwallet{
+  white-space: nowrap;
+  font-size: 0.75rem;
+  overflow: hidden;
+  text-overflow: ellipsis
+}
+/* CREATE.TSX */
+#createisloading{
+  text-align: center;
+  margin-top: 1rem;
+  margin-bottom: 1rem
+}
+#createerror{
+  color: #F56565;
+  text-align: center;
+  margin-top: 1rem;
+  margin-bottom: 1rem
+}
+#createnouserdata{
+  text-align: center;
+  margin-bottom: 15px
+}
+#createexport{
+  color: white;
+  height: 40px;
+  width: 150px;
+  background: linear-gradient(to bottom, #9339F4, #105FB0);
+  border-radius: 0.375rem;
+  margin-bottom: 20px
+}
+.hidden{
+  display: none
+}
+#createimport{
+  color: white;
+  height: 40px;
+  width: 150px;
+  background: linear-gradient(to bottom, #9339F4, #105FB0);
+  border-radius: 0.375rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer
+}
+#createporttext{
+  font-size: 0.875rem;
+  text-align: center;
+  margin-top: 15px
+}
+#createstatus{
+  text-align: center;
+  margin-top: 15px;
+  color: #F56565;
+  font-weight: bold
+}
+#createphoto{
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center
+}
+#createphotochild{
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 9999px;
+  overflow: hidden
+}
+#createphotosize{
+  width: 100%;
+  height: 100%;
+  object-fit: cover
+}
+#createfallback{
+  width: 3.5rem;
+  height: 3.5rem
+}
+#createusertext{
+  margin-left: 0.5rem;
+  width: 190px;
+  overflow: hidden
+}
+#createusername{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: bold
+}
+#createuserwallet{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis
+}
+#create{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+  margin-left: 20px;
+  margin-right: 20px
+}
+#createback{
+  color: white;
+  height: 40px;
+  width: 150px;
+  background: linear-gradient(to bottom, #9339F4, #105FB0);
+  border-radius: 0.375rem;
+  margin-top: 25px;
+  margin-bottom: 20px
+}
+#creatensec{
+  display: flex;
+  width: 100%;
+  margin-bottom: 15px
+}
+#createisvalid{
+  padding: 0.5rem;
+  border: 0 px solid;
+  border-radius: 0.375rem 0 0 0.375rem;
+  width: 100%;
+  outline: none
+}
+#creategenerate{
+  border-radius: 0 0.375rem 0.375rem 0;
+  background-color: white;
+  width: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center
+}
+#createsize{
+  width: 1.5rem;
+  height: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center
+}
+.createwfull{
+  width: 100%
+}
+#createboxencrypt{
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem
+}
+.mr-2{
+  margin-right: 0.5rem
+}
+.text-green-500{
+  color: #48BB78
+}
+.text-red-500{
+  color: #F56565
+}
+#createboxdontencrypt{
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem
+}
+#createinput1{
+  padding: 0.5rem;
+  border: 1px solid;
+  border-radius: 0.375rem;
+  width: 100%;
+  margin-bottom: 0.5rem;
+  outline: none;
+  color: black
+}
+#createinput2{
+  padding: 0.5rem;
+  border: 1px solid;
+  border-radius: 0.375rem;
+  width: 100%;
+  margin-bottom: 1rem;
+  outline: none;
+  color: black
+}
+#createshowpass{
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem
+}
+#createcreate{
+  color: white;
+  height: 40px;
+  width: 100%;
+  background: linear-gradient(to bottom, #9339F4, #105FB0);
+  border-radius: 0.375rem
+}
+.opacity-50{
+  opacity: 0.5
+}
+.cursor-not-allowed{
+  cursor: not-allowed
+}
+#createwarning{
+  margin-top: 1rem;
+  width: 100%;
+  background-color: #FEF9C3;
+  border-left: 4px solid #FBBF24;
+  color: #7E4B1C;
+  padding: 1rem
+}
+.font-bold{
+  font-weight: bold
+}
+#createwarn{
+  margin-top: 1rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem
+}
+#createwarnfalse{
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  background-color: #D1D5DB;
+  border-radius: 0.375rem;
+  width: 100%
+}
+#createwarntrue{
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  background-color: #F56565;
+  color: white;
+  border-radius: 0.375rem;
+  width: 100%
+}
+/* USERPROFILE.TSX */
+#profile{
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-left: 20px;
+  margin-right: 20px
+}
+#profileback{
+  color: #ffffff;
+  height: 40px;
+  width: 150px;
+  margin-bottom: 20px;
+  flex-shrink: 0;
+  background-image: linear-gradient(to bottom, #9339F4, #105FB0);
+  border-radius: 0.5rem;
+  margin-top: 25px
+}
+#profilepicparent{
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  width: 100%
+}
+#profilepicparent:hover {
+  filter: brightness(105%);
+  color: #ffffff
+}
+#profilepic{
+  position: relative;
+  height: 70px;
+  width: 70px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0
+}
+#profilepiccover{
+  width: 100%;
+  height: 100%;
+  object-fit: cover
+}
+#profilefallback{
+  height: 70px;
+  width: 70px
+}
+#profileupdating{
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center
+}
+#profiletext{
+  margin-left: 0.5rem;
+  width: 190px;
+  overflow: hidden
+}
+#profilename{
+  white-space: nowrap;
+  font-weight: bold;
+  text-overflow: ellipsis;
+  overflow: hidden
+}
+#profilewallet{
+  white-space: nowrap;
+  font-size: 0.75rem;
+  text-overflow: ellipsis;
+  overflow: hidden
+}
+#profilelogin{
+  display: flex;
+  width: 100%;
+  margin-bottom: 15px
+}
+#profilelogininput{
+  padding: 0.5rem;
+  border: 0px solid;
+  border-radius: 0.25rem 0 0 0.25rem;
+  width: 100%;
+  outline: none;
+  color: black
+}
+#profileloginbutton{
+  border-radius: 0 0.25rem 0.25rem 0;
+  width: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #699f4c
+}
+#profileloginbutton:hover {
+  background-color: #5c8a3c
+}
+#profileloginbutton:active {
+  background-color: #4f7431
+}
+#profileloginsvg{
+  width: 1.5rem;
+  height: 1.5rem
+}
+.w-full{
+  width: 100%
+}
+#profilecheckbox{
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  width: 100%
+}
+#isloggedin{
+  display: flex;
+  gap: 5px;
+  margin-top: 5px;
+  margin-bottom: 5px
+}
+#profilered{
+  color: #FFFFFF;
+  height: 40px;
+  width: 126px;
+  background-color: #C32F2F;
+  border-top-left-radius: 0.5rem
+}
+#profilegreen{
+  color: #FFFFFF;
+  height: 40px;
+  width: 126px;
+  background-color: #45A049;
+  border-top-right-radius: 0.5rem
+}
+#profilegap{
+  display: flex;
+  gap: 5px
+}
+#profileblue{
+  color: #FFFFFF;
+  height: 40px;
+  width: 126px;
+  background-color: #103FF0;
+  border-bottom-left-radius: 0.5rem
+}
+#profileyellow{
+  color: #FFFFFF;
+  height: 40px;
+  width: 126px;
+  background-color: rgb(202 138 4);
+  border-bottom-right-radius: 0.5rem
+}
+#profileblueitalic{
+  margin-top: 5px;
+  font-style: italic
+}
+.profilebluebold{
+  margin-top: 5px;
+  font-weight: bold
+}
+.break-all{
+  word-break: break-all
+}
+.profilebluetimer{
+  cursor: pointer;
+  transition-property: color;
+  transition-duration: 300ms
+}
+#profileshowdeletion{
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-top: 10px
+}
+.profileredspacing{
+  text-align: center;
+  margin-bottom: 10px;
+  font-style: italic
+}
+#profileredtab{
+  display: flex;
+  width: 100%;
+  margin-bottom: 10px
+}
+#profileredinput{
+  padding: 8px;
+  border: 0px solid;
+  border-radius: 5px 0 0 5px;
+  width: 100%;
+  outline: none;
+  color: black
+}
+#profileredbutton{
+  border-radius: 0px 5px 5px 0px;
+  width: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #ff3838
+}
+#profileredbutton:hover {
+  background-color: #ff2222
+}
+#profileredbutton:active {
+  background-color: #ff0000
+}
+#profileredsvg{
+  width: 1.5rem;
+  height: 1.5rem
+}
+#profilereddelete{
+  color: #ff073a;
+  text-align: center
+}
+#profilechangepass{
+  width: 100%;
+  margin-top: 1rem
+}
+.profilegreeninput{
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 0.25rem;
+  width: 100%;
+  margin-bottom: 0.5rem;
+  outline: none;
+  color: #000
+}
+#profileredbox{
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem
+}
+#profileredconfirm{
+  color: #ffffff;
+  height: 40px;
+  width: 100%;
+  margin-bottom: 25px;
+  background-image: linear-gradient(to bottom, #9339F4, #105FB0);
+  border-radius: 0.5rem
+}
+#profilepermission{
+  width: 100%;
+  margin-top: 1rem
+}
+#profilecountdown{
+  color: #F7DC6F;
+  text-align: center
+}
+/* LOADER.TSX */
+@layer utilities {#loader {animation: pulse-animation 1.8s linear infinite}}
+@keyframes pulse-animation {
+  0%   {opacity: 1;transform: scale(0)}
+  80%  {opacity: 0}
+  100% {transform: scale(2.3);opacity: 0}
+}
+#reloader{
+  position: relative
+}
+#abloader{
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0
+}
+#loader{
+  width: 100%;
+  height: 100%;
+  border-radius: 9999px;
+  border: 4px solid #9b59b6
+}
