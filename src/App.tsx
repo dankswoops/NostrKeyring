@@ -19,6 +19,7 @@ import {
   initializeNsecCache,
   getPersistentLoginState
 } from './utils/storage';
+import { updateBackgroundKeys } from './utils/passkeys';
 
 interface UserProfile {
   id: number;
@@ -35,6 +36,7 @@ const App = () => {
   const [selectedUser, setSelectedUser] = useState<UserProfile | null>(null);
   const [users, setUsers] = useState<UserProfile[]>([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [currentUserKeys, setCurrentUserKeys] = useState<{ pubkey: string | null, seckey: string | null }>({ pubkey: null, seckey: null });
 
   useEffect(() => {
     const initialize = async () => {
@@ -101,11 +103,17 @@ const App = () => {
     setCurrentPage('create');
   };
 
-  const handleUserSelect = (user: UserProfile) => {
+  const handleUserSelect = async (user: UserProfile) => {
     setSelectedUser(user);
     setCurrentPage('user');
     setIsLoggedIn(true);
-    setLoginState({ isLoggedIn: true, loggedInUserId: user.id });
+    await setLoginState({ isLoggedIn: true, loggedInUserId: user.id });
+    // Update the current user keys
+    const newKeys = { pubkey: user.pubkey, seckey: user.nsec };
+    setCurrentUserKeys(newKeys);
+    // Send the new keys to the background script
+    console.log('Sending keys to background script:', newKeys.pubkey, newKeys.seckey ? '[REDACTED]' : null);
+    await updateBackgroundKeys(newKeys);
   };
 
   const handleNewUserCreated = () => {
@@ -145,11 +153,15 @@ const App = () => {
     await updateUserProfile(updatedUser);
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     setIsLoggedIn(false);
     setSelectedUser(null);
     setCurrentPage('login');
-    clearLoginState();
+    await clearLoginState();
+    // Clear the current user keys
+    setCurrentUserKeys({ pubkey: null, seckey: null });
+    // Send null keys to the background script
+    await updateBackgroundKeys({ pubkey: null, seckey: null });
   };
 
   return (

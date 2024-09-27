@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 import * as esbuild from 'esbuild'
 import fs from 'fs'
-import path from 'path'
 
 // Function to delete a file if it exists
 function deleteFileIfExists(filePath) {
