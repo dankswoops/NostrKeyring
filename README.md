@@ -123,7 +123,7 @@ To Build:
 1. On root in IDE > Open Intergated Terminal > `npm i` then `npm run build`
 2. Open folder `Root`>`extension`>`manifest.json`
 3. Go into browser URL:
-3. - firefox: `about:debugging#/runtime/this-firefox`
+3. - firefox: `about:debugging#/runtime/this-firefox`, add `manifest.json`
 3. - chrome: `chrome://extensions/`, enable dev mode, drop the extension folder   
 3. - safari: ``
 
@@ -164,35 +164,25 @@ Please note that this software is provided "as is," and we assume no liability f
 <!----------------------------------------------------------------------------->
 
 ## Versions, Fixes, & Bugs
-1.0.0: Offical Release 🎉🥳🎊   
-- It's stable, no clue what's broken or buggy yet 🤪   
-- Code Auditors! please examine `nip65.ts` and `manifest.json`'s connect-src 'self' wss://* and make sure it's secure.
+<!-- 1.0.0: Offical Release 🎉🥳🎊    -->
+0.9.0 Pre-Release - Almost working   
+
 <br />
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 <!----------------------------------------------------------------------------->
 
 ## Roadmap Before Full Release
-1. implement nip-07 (for the love of god 😭)
-1. add approve once, approve all button and request number
-1. update permission list (site,revoke button)
-
-
-1. Create keys, sign into client, change profile pic, test nip65 update
-
-
-1. Add each language and all text remapping to i18 
-1. have users confirm all localizations
-
-
-1. compile to firefox, upload to mozilla dev account
-1. compile to chrome, upload to chrome dev account
-1. compile to safari, upload to safari dev account
-
-
-1. optmize/organize code, comment it like a real keyboard gangster
-
-
-1. add compile option to remove comment, check all compile options
+1. 0.9.1 - implement nip-07 correctly (for the love of god 😭) verify on cornychat.com console.
+1. 0.9.2 - verify nip-04 and nip-44 is valid
+1. 0.9.3 - add popup page, approve kind once, approve kind always, reject
+1. 0.9.4 - UserProfile always permission list (site, kind, revoke button)
+1. 0.9.5 - Import.html, pass import .json user into App.js
+1. Create keys, sign into client, change profile on client pic, test nip65 update
+1. 0.9.6 - Add each language and all text remapping to i18, have users confirm all localizations
+1. 0.9.7 - compile to firefox, upload to mozilla dev account
+1. 0.9.8 - compile to chrome, upload to chrome dev account
+1. 0.9.9 - compile to safari, upload to safari dev account
+1. 1.0.0 - optmize/organize code, comment it like a real keyboard gangster, release
 <br />
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 <!----------------------------------------------------------------------------->
