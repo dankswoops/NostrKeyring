@@ -3,6 +3,7 @@ import { generateSecretKey, isValidSecretKey, getPublicKeyHex, nip19 } from '../
 import { fetchUserDataAndRelays } from '../utils/nip65';
 import { encryptSecretKey } from '../utils/encrypt';
 import { getUserProfiles, createUserProfile } from '../utils/storage';
+import { useTranslation } from 'react-i18next';
 
 interface CreateProps {
   onUserCreated: () => void;
@@ -30,6 +31,7 @@ export default function Create({ onUserCreated, onBack }: CreateProps) {
   const [error, setError] = useState<string | null>(null);
   const [importStatus, setImportStatus] = useState('');
   const [showImportStatus, setShowImportStatus] = useState(false);
+  const { t } = useTranslation();
 
   useEffect(() => {
     const checkValidityAndFetchData = async () => {
@@ -46,7 +48,7 @@ export default function Create({ onUserCreated, onBack }: CreateProps) {
           setMetadata(fetchedMetadata);
         } catch (error) {
           console.error('Error fetching user data:', error);
-          setError("Failed to fetch user data. Please try again.");
+          setError(t('CreateError'));
           setMetadata(null);
         } finally {
           setIsLoading(false);
@@ -196,7 +198,7 @@ export default function Create({ onUserCreated, onBack }: CreateProps) {
 
   const renderMetadata = () => {
     if (isLoading) {
-      return <div draggable='false' id='createisloading'>Loading user data...</div>;
+      return <div draggable='false' id='createisloading'>{t('CreateLoading')}</div>;
     }
 
     if (error) {
@@ -206,12 +208,12 @@ export default function Create({ onUserCreated, onBack }: CreateProps) {
     if (!metadata) {
       return (
         <>
-          <div draggable='false' id='createnouserdata'>No user data available</div>
+          <div draggable='false' id='createnouserdata'>{t('CreateNoUser')}</div>
           <button
             id='createexport'
             onClick={handleExport}
           >
-            Export Backup
+            {t('CreateExport')}
           </button>
           <label id='createimport'>
             <input
@@ -220,11 +222,10 @@ export default function Create({ onUserCreated, onBack }: CreateProps) {
               onChange={handleImport}
               className='hidden'
             />
-            <span draggable='false'>Import Backup</span>
+            <span id='createimporttext' draggable='false'>{t('CreateImport')}</span>
           </label>
           <div draggable='false' id='createporttext'>
-            <p>Please select the 'nostr_keyring_backup.json' file from your download folder.</p>
-            <p>You may need to navigate to find this file on your device.</p>
+            <p>'nostr_keyring_backup.json' {t('CreateJson')}</p>
           </div>
           {showImportStatus && (
             <div draggable='false' id='createstatus'>{importStatus}</div>
@@ -251,8 +252,8 @@ export default function Create({ onUserCreated, onBack }: CreateProps) {
           </div>
         )}
         <div id='createusertext'>
-          <div id='createusername'>{metadata.name || 'Unnamed'}</div>
-          <div id='createuserwallet'>{metadata.lud16 || 'No wallet address'}</div>
+          <div id='createusername'>{metadata.name || t('CreateUnnamed')}</div>
+          <div id='createuserwallet'>{metadata.lud16 || t('CreateWallet')}</div>
         </div>
       </div>
     );
@@ -264,14 +265,14 @@ export default function Create({ onUserCreated, onBack }: CreateProps) {
         id='createback'
         onClick={onBack}
       >
-        Back
+        {t('CreateBack')}
       </button>
       <div id='creatensec'>
         <input
           id='createisvalid'
           className={`font-bold ${isValidKey ? 'text-green-500' : 'text-red-500'}`}
           type='text'
-          placeholder='Paste or Create NSec'
+          placeholder={t('CreatePaste')}
           value={nsec}
           onChange={handleInputChange}
         />
@@ -297,7 +298,7 @@ export default function Create({ onUserCreated, onBack }: CreateProps) {
               onChange={(e) => setEncryptKey(e.target.checked)}
               className='mr-2'
             />
-            <label htmlFor='encryptKey' className='createwfull'><span draggable='false'>Encrypt Key</span></label>
+            <label htmlFor='encryptKey' className='createwfull'><span draggable='false'>{t('CreateEncrypt')}</span></label>
           </div>
           <div id='createboxdontencrypt'>
             <input
@@ -307,20 +308,20 @@ export default function Create({ onUserCreated, onBack }: CreateProps) {
               onChange={(e) => setEncryptKey(!e.target.checked)}
               className='mr-2'
             />
-            <label htmlFor='dontEncrypt' className='createwfull'><span draggable='false'>Don't Encrypt</span></label>
+            <label htmlFor='dontEncrypt' className='createwfull'><span draggable='false'>{t('CreateUncrypt')}</span></label>
           </div>
           {encryptKey && (
             <>
               <input
                 type={showPassword ? 'text' : 'password'}
-                placeholder='Enter password'
+                placeholder={t('CreateEnter')}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 id='createinput1'
               />
               <input
                 type={showPassword ? 'text' : 'password'}
-                placeholder='Verify password'
+                placeholder={t('CreateVerify')}
                 value={verifyPassword}
                 onChange={(e) => setVerifyPassword(e.target.value)}
                 id='createinput2'
@@ -333,36 +334,36 @@ export default function Create({ onUserCreated, onBack }: CreateProps) {
                   onChange={(e) => setShowPassword(e.target.checked)}
                   className='mr-2'
                 />
-                <label htmlFor='showPassword' className='w-full'><span draggable='false'>Show Password</span></label>
+                <label htmlFor='showPassword' className='w-full'><span draggable='false'>{t('CreatePassword')}</span></label>
               </div>
             </>
           )}
           <button
             id='createcreate'
-            className={`${(!encryptKey || (encryptKey && passwordsMatch && password !== '')) && metadata ? '' : 'opacity-50 cursor-not-allowed'}`}
+            className={`${(!encryptKey || (encryptKey && passwordsMatch && password !== '')) && metadata ? 'cursor-pointer' : 'opacity-50 cursor-not-allowed'}`}
             onClick={handleCreateProfile}
             disabled={encryptKey && (!passwordsMatch || password === '') || !metadata}
           >
-            Create Profile
+            {t('CreateProfile')}
           </button>
         </div>
       )}
       {showWarning && (
         <div id='createwarning'>
-          <div draggable='false' className='font-bold'>WARNING</div>
-          <p draggable='false'>You should set a password. Are you sure you want to continue without encryption?</p>
+          <div draggable='false' className='font-bold'>{t('CreateWarning')}</div>
+          <p draggable='false'>{t('CreateWarnText')}</p>
           <div id='createwarn'>
             <button
               id='createwarnfalse'
               onClick={() => setShowWarning(false)}
             >
-              No
+              {t('CreateNo')}
             </button>
             <button
               id='createwarntrue'
               onClick={() => handleWarningResponse(true)}
             >
-              Yes
+              {t('CreateYes')}
             </button>
           </div>
         </div>

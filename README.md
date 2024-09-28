@@ -165,20 +165,18 @@ Please note that this software is provided "as is," and we assume no liability f
 
 ## Versions, Fixes, & Bugs
 <!-- 1.0.0: Offical Release 🎉🥳🎊    -->
-0.9.0 Pre-Release - Almost working   
+0.9.1 Pre-Release - Almost working   
 
 <br />
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 <!----------------------------------------------------------------------------->
 
-## Roadmap Before Full Release
-0.9.0 - remove hard coded keys from background, dynammically call from UserProfile   
-0.9.1 - implement nip-07 correctly (for the love of god 😭) verify on cornychat.com console.   
-0.9.2 - verify nip-04 and nip-44 is valid   
-0.9.3 - add popup page, approve kind once, approve kind always, reject   
-0.9.4 - UserProfile always permission list (site, kind, revoke button)   
-0.9.5 - Import.html, pass import .json user into App.js   
-0.9.6 - Add each language and all text remapping to i18, have users confirm all localizations   
+## Roadmap Before Full Release 
+0.9.2 - implement nip-07 correctly (for the love of god 😭) verify on cornychat.com console.   
+0.9.3 - verify nip-04 and nip-44 is valid   
+0.9.4 - add popup page, approve kind once, approve kind always, reject   
+0.9.5 - UserProfile always permission list (site, kind, revoke button)   
+0.9.6 - Import.html, pass import .json user into App.js    
 0.9.7 - compile to firefox, upload to mozilla dev account   
 0.9.8 - compile to chrome, upload to chrome dev account   
 0.9.9 - compile to safari, upload to safari dev account   

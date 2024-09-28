@@ -12,6 +12,7 @@ import ru from '../locales/ru.json';
 import ur from '../locales/ur.json';
 import id from '../locales/id.json';
 import de from '../locales/de.json';
+import th from '../locales/th.json';
 
 const resources = {
   en: en,
@@ -26,6 +27,7 @@ const resources = {
   ur: ur,
   id: id,
   de: de,
+  th: th,
 };
 
 i18n

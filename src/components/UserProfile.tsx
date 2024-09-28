@@ -15,6 +15,7 @@ import {
   clearCachedNsecAndPassword
 } from '../utils/storage';
 import Loader from './Loader';
+import { useTranslation } from 'react-i18next';
 
 interface UserType {
   id: number;
@@ -52,6 +53,7 @@ export default function UserProfile({ user, onBack, onDelete, onUserUpdate, onLo
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [copiedNsec, setCopiedNsec] = useState(false);
   const [copiedNpub, setCopiedNpub] = useState(false);
+  const { t } = useTranslation();
 
   useEffect(() => {
     const initialize = async () => {
@@ -212,7 +214,7 @@ export default function UserProfile({ user, onBack, onDelete, onUserUpdate, onLo
     if (deleteConfirmName === updatedUser.name) {
       onDelete(user.id);
     } else {
-      setDeleteError('Doesn\'t match. Try again.');
+      setDeleteError(t('ProfileDont'));
     }
   };
 
@@ -224,7 +226,7 @@ export default function UserProfile({ user, onBack, onDelete, onUserUpdate, onLo
         await storeUnencryptedNsec(user.pubkey, cachedNsec);
         setUpdatedUser(prevUser => ({ ...prevUser, nsec: cachedNsec }));
       } else if (newPassword !== verifyNewPassword) {
-        setError('New passwords do not match');
+        setError(t('ProfileNoMatch'));
         return;
       } else {
         let nsecToEncrypt = updatedUser.nsec;
@@ -235,7 +237,7 @@ export default function UserProfile({ user, onBack, onDelete, onUserUpdate, onLo
             nsecToEncrypt = cachedNsec;
           } else {
             // If we can't get the decrypted nsec, we can't proceed
-            throw new Error('Unable to retrieve decrypted nsec');
+            throw new Error(t('ProfileUnable'));
           }
         }
   
@@ -262,7 +264,7 @@ export default function UserProfile({ user, onBack, onDelete, onUserUpdate, onLo
       console.log('Password updated successfully');
     } catch (error) {
       console.error('Error updating password:', error);
-      setError('Failed to update password. Please try again.');
+      setError(t('ProfileFailed'));
     }
   };
 
@@ -282,7 +284,7 @@ export default function UserProfile({ user, onBack, onDelete, onUserUpdate, onLo
       const currentUser = users.find(u => u.pubkey === updatedUser.pubkey);
       
       if (!currentUser) {
-        throw new Error('User not found');
+        throw new Error(t('ProfileNotFound'));
       }
   
       const loggedInUser = currentUser as UserType;
@@ -306,7 +308,7 @@ export default function UserProfile({ user, onBack, onDelete, onUserUpdate, onLo
       fetchLatestUserData();
     } catch (err) {
       console.error('Login error:', err);
-      setError('Invalid password');
+      setError(t('ProfileInvalid'));
       setRetryCountdown(5);
     }
   };
@@ -330,7 +332,7 @@ export default function UserProfile({ user, onBack, onDelete, onUserUpdate, onLo
         disabled={retryCountdown > 0}
         draggable={retryCountdown > 0 ? 'false' : undefined}
       >
-        {isLoggedIn ? 'Logout' : 'Back'}
+        {isLoggedIn ? t('ProfileLogout') : t('ProfileBack')}
       </button>
       <div id='profilepicparent'>
         <div id='profilepic'>
@@ -354,12 +356,12 @@ export default function UserProfile({ user, onBack, onDelete, onUserUpdate, onLo
         </div>
         <div draggable='false' id='profiletext'>
           <div id='profilename'>{updatedUser.name}</div>
-          <div id='profilewallet'>{updatedUser.lud16 || 'No wallet address'}</div>
+          <div id='profilewallet'>{updatedUser.lud16 || t('ProfileWallet')}</div>
         </div>
       </div>
       {!isLoggedIn && !user.nsec.startsWith('nsec1') && (
         <>
-          <div className={`${retryCountdown > 0 ? 'opacity-50' : ''}`} id='profilelogin'>
+          <div id='profilelogin' className={`${retryCountdown > 0 ? 'opacity-50' : ''}`}>
             <input
               id='profilelogininput'
               type={showNewPassword ? 'text' : 'password'}
@@ -394,7 +396,7 @@ export default function UserProfile({ user, onBack, onDelete, onUserUpdate, onLo
               draggable={retryCountdown > 0 ? 'false' : undefined}
             />
             <label htmlFor='showNewPassword' className='w-full'>
-              <span draggable='false'>Show Password</span>
+              <span draggable='false'>{t('ProfileShowPass')}</span>
             </label>
           </div>
         </>
@@ -407,13 +409,13 @@ export default function UserProfile({ user, onBack, onDelete, onUserUpdate, onLo
               className={`${showDeleteConfirmation}`}
               onClick={handleDeleteClick}
             >
-              {showDeleteConfirmation ? 'Cancel' : 'Delete User'}
+              {showDeleteConfirmation ? t('ProfileCancel') : t('ProfileRed')}
             </button>
             <button
               id='profilegreen'
               onClick={handleChangePasswordClick}
             >
-              {showChangePassword ? 'Cancel' : 'Change Pass'}
+              {showChangePassword ? t('ProfileCancel') : t('ProfileGreen')}
             </button>
           </div>
           <div id='profilegap'>
@@ -421,41 +423,20 @@ export default function UserProfile({ user, onBack, onDelete, onUserUpdate, onLo
               id='profileblue'
               onClick={handleShowKeysClick}
             >
-              {showNsec ? 'Cancel' : 'Show Keys'}
+              {showNsec ? t('ProfileCancel') : t('ProfileBlue')}
             </button>
             <button
               id='profileyellow'
               onClick={handlePermissionsClick}
             >
-              {showPermissions ? 'Cancel' : 'Permissions'}
+              {showPermissions ? t('ProfileCancel') : t('ProfileYellow')}
             </button>
           </div>
-          {showNsec && (
-            <>
-              <p draggable='false' id='profileblueitalic'>Click key to copy</p>
-              <p draggable='false' className='profilebluebold'>Secret Key (Nsec):</p>
-              <div 
-                id='copyNsec' 
-                onClick={() => handleCopy(updatedUser.nsec, setCopiedNsec)}
-                className={`profilebluetimer ${copiedNsec ? 'text-green-500' : ''}`}
-              >
-                <p draggable='false' className='break-all'>{updatedUser.nsec || 'Not available'}</p>
-              </div>
-              <p draggable='false' className='profilebluebold'>Public Key (Npub):</p>
-              <div 
-                id='copyNpub' 
-                onClick={() => handleCopy(user.npub, setCopiedNpub)}
-                className={`profilebluetimer ${copiedNpub ? 'text-green-500' : ''}`}
-              >
-                <p draggable='false' className='break-all'>{user.npub}</p>
-              </div>
-            </>
-          )}
           {showDeleteConfirmation && (
             <div id='profileshowdeletion'>
-              <div draggable='false' className='profileredspacing'>Are you sure?</div>
-              <div draggable='false' className='profileredspacing'>This is permanent</div>
-              <div draggable='false' className='profileredspacing'>Enter username to delete</div>
+              <div draggable='false' className='profileredspacing'>{t('ProfileRed1')}</div>
+              <div draggable='false' className='profileredspacing'>{t('ProfileRed2')}</div>
+              <div draggable='false' className='profileredspacing'>{t('ProfileRed3')}</div>
               <div id='profileredtab'>
                 <input
                   id='profileredinput'
@@ -490,14 +471,14 @@ export default function UserProfile({ user, onBack, onDelete, onUserUpdate, onLo
             <div id='profilechangepass'>
               <input
                 type={showNewPassword ? 'text' : 'password'}
-                placeholder='Enter new password'
+                placeholder={t('ProfileGreen1')}
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 className='profilegreeninput'
               />
               <input
                 type={showNewPassword ? 'text' : 'password'}
-                placeholder='Verify new password'
+                placeholder={t('ProfileGreen2')}
                 value={verifyNewPassword}
                 onChange={(e) => setVerifyNewPassword(e.target.value)}
                 className='profilegreeninput'
@@ -511,7 +492,7 @@ export default function UserProfile({ user, onBack, onDelete, onUserUpdate, onLo
                   className='mr-2'
                 />
                 <label htmlFor='showNewPassword' className='w-full'>
-                  <span draggable='false'>Show Password</span>
+                  <span draggable='false'>{t('ProfileGreen3')}</span>
                 </label>
               </div>
               <button
@@ -520,13 +501,34 @@ export default function UserProfile({ user, onBack, onDelete, onUserUpdate, onLo
                 onClick={handleChangePassword}
                 disabled={newPassword !== verifyNewPassword}
               >
-                Update Password
+                {t('ProfileGreen4')}
               </button>
             </div>
           )}
+          {showNsec && (
+            <>
+              <p draggable='false' id='profileblueitalic'>{t('ProfileBlue1')}</p>
+              <p draggable='false' className='profilebluebold'>{t('ProfileBlue2')}(Nsec):</p>
+              <div 
+                id='copyNsec' 
+                onClick={() => handleCopy(updatedUser.nsec, setCopiedNsec)}
+                className={`profilebluetimer ${copiedNsec ? 'text-green-500' : ''}`}
+              >
+                <p draggable='false' className='break-all'>{updatedUser.nsec || 'Not available'}</p>
+              </div>
+              <p draggable='false' className='profilebluebold'>{t('ProfileBlue3')}(Npub):</p>
+              <div 
+                id='copyNpub' 
+                onClick={() => handleCopy(user.npub, setCopiedNpub)}
+                className={`profilebluetimer ${copiedNpub ? 'text-green-500' : ''}`}
+              >
+                <p draggable='false' className='break-all'>{user.npub}</p>
+              </div>
+            </>
+          )}
           {showPermissions && (
             <div id='profilepermission'>
-              <p>Permissions</p>
+              <p>Permissions, add revoke box here</p>
             </div>
           )}
         </>
@@ -535,7 +537,7 @@ export default function UserProfile({ user, onBack, onDelete, onUserUpdate, onLo
         <div draggable='false'>
           <p className='text-red-500'>{error}</p>
           {retryCountdown > 0 && (
-            <p id='profilecountdown'>Try again in: {retryCountdown}</p>
+            <p id='profilecountdown'>{t('ProfileTry')}{retryCountdown}</p>
           )}
         </div>
       )}

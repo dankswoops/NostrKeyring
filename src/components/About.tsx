@@ -6,8 +6,12 @@ interface AboutProps {
 }
 
 export default function X({ onBack }: AboutProps) {
-  const [authorText, setAuthorText] = useState('Click to Copy my Npub');
+  const [authorText, setAuthorText] = useState('');
   const { t, i18n } = useTranslation();
+
+  useEffect(() => {
+    setAuthorText(t('About7'));
+  }, [t]);
 
   useEffect(() => {
     const loadLanguagePreference = async () => {
@@ -46,9 +50,9 @@ export default function X({ onBack }: AboutProps) {
   const handleAuthorClick = () => {
     const npub = 'npub1yrkexvt88h6cgd32gdcfm55auuz6rw6c70xj478gcz6lstz5czvs9s77xh';
     navigator.clipboard.writeText(npub).then(() => {
-      setAuthorText('Npub Copied!');
+      setAuthorText(t('About8'));
       setTimeout(() => {
-        setAuthorText('Click to Copy my Npub');
+        setAuthorText(t('About7'));
       }, 3000);
     }).catch(err => {
       console.error('Failed to copy text: ', err);
@@ -61,7 +65,7 @@ export default function X({ onBack }: AboutProps) {
         id='aboutbutton'
         onClick={onBack}
       >
-        {t('back')}
+        {t('AboutBack')}
       </button>
       <div id='mb20'>
         <select
@@ -81,30 +85,30 @@ export default function X({ onBack }: AboutProps) {
           <option value="ur">اردو</option>
           <option value="id">Bahasa Indonesia</option>
           <option value="de">Deutsch</option>
+          <option value="th">ไทย</option>
         </select>
       </div>
       <div draggable="false" className="mb15">
-        This extension manages your NOSTR secret keys. 
+        {t('About1')}
       </div>
       <div draggable="false" className="mb15">
-        For security, you should refrain from copying any secret key into your clipboard and try to view the raw key as little as possible. 
-        Nostr keys cannot be reset, so if your key gets leaked, the nsec is compromised and any connected funds will likely get rugged.
+        {t('About2')}
       </div>
       <div draggable="false" className="mb15">
-        Always ensure you're using this extension in a secure environment, encrypt all your keys, logout of your User Profile before letting others use this device, and never share your secret keys with anyone.
+        {t('About3')}
       </div>
       <div draggable="false" className="mb25">
-        <span id='aboutred'>Warning: </span>
-        If you delete this extension, all your User Profile keys will be deleted too. So back your keys up!
+        <span id='aboutred'>{t('About4')}</span>
+        {t('About5')}
       </div>
       <div draggable="false" id='aboutcenter'>
-        Bugs, Suggestions, or Zaps?
+        {t('About6')}
       </div>
       <div id="author" onClick={handleAuthorClick}>
         <span draggable="false">{authorText}</span>
       </div>
       <div draggable="false">
-        Want to audit the code?
+        {t('About9')}
       </div>
       <a 
         href="https://github.com/dankswoops/NostrKeyring"
@@ -113,7 +117,7 @@ export default function X({ onBack }: AboutProps) {
         target="_blank"
       >
         <span draggable="false">
-          Github Repo
+          {t('About10')}
         </span>
       </a>
     </div>

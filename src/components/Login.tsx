@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getUserProfiles } from '../utils/storage';
+import { useTranslation } from 'react-i18next';
 
 interface UserProfile {
   id: number;
@@ -18,6 +19,7 @@ interface LoginProps {
 
 export default function Login({ onCreateProfile, onUserSelect }: LoginProps) {
   const [users, setUsers] = useState<UserProfile[]>([]);
+  const { t } = useTranslation();
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -34,7 +36,7 @@ export default function Login({ onCreateProfile, onUserSelect }: LoginProps) {
         id='loginbutton'
         onClick={onCreateProfile}
       >
-        Create Profile
+        {t('LoginCreate')}
       </button>
       {users.map((user) => (
         <div
@@ -47,7 +49,7 @@ export default function Login({ onCreateProfile, onUserSelect }: LoginProps) {
               <div id='loginphoto'>
                 <img 
                   src={user.picture}
-                  alt='User' 
+                  alt='User'
                   id='loginphotochild'
                 />
               </div>

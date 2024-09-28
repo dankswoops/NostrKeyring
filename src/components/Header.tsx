@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface HeaderProps {
   onAboutClick: () => void;
@@ -7,6 +8,7 @@ interface HeaderProps {
 
 export default function X({ onAboutClick, isLoggedIn }: HeaderProps) {
   const [isHovered, setIsHovered] = useState(false);
+  const { t } = useTranslation();
 
   return (
     <>
@@ -31,7 +33,7 @@ export default function X({ onAboutClick, isLoggedIn }: HeaderProps) {
         </div>
         {/* TITLE */}
         <div draggable='false' id='title'>
-          {isLoggedIn ? 'Nostr Keyring' : (isHovered ? 'About' : 'Nostr Keyring')}
+          {isLoggedIn ? t('HeaderNostrKeyring') : (isHovered ? t('HeaderAbout') : t('HeaderNostrKeyring') )}
         </div>
         {/* KEYRING */}
         <div draggable='false'>
