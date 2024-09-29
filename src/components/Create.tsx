@@ -108,7 +108,7 @@ export default function Create({ onUserCreated, onBack }: CreateProps) {
       pubkey: pubkeyHex,
       name: metadata.name || `${t('CreateUnnamed')} ${randomNumber}`,
       picture: metadata.picture,
-      lud16: metadata.lud16
+      lud16: metadata.lud16 || `${t('CreateWallet')}`
     });
   
     onUserCreated();
