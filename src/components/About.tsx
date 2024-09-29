@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { setLanguagePreference, getLanguagePreference } from '../utils/storage';
 
 interface AboutProps {
   onBack: () => void;
@@ -13,38 +14,10 @@ export default function X({ onBack }: AboutProps) {
     setAuthorText(t('About7'));
   }, [t]);
 
-  useEffect(() => {
-    const loadLanguagePreference = async () => {
-      if (typeof chrome !== 'undefined' && chrome.storage) {
-        // We're in a browser extension environment
-        chrome.storage.sync.get(['language'], (result) => {
-          if (result.language) {
-            i18n.changeLanguage(result.language);
-          }
-        });
-      } else {
-        // We're in a development environment
-        const savedLanguage = localStorage.getItem('language');
-        if (savedLanguage) {
-          i18n.changeLanguage(savedLanguage);
-        }
-      }
-    };
-
-    loadLanguagePreference();
-  }, [i18n]);
-
-  const handleLanguageChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleLanguageChange = async (event: React.ChangeEvent<HTMLSelectElement>) => {
     const newLanguage = event.target.value;
     i18n.changeLanguage(newLanguage);
-
-    if (typeof chrome !== 'undefined' && chrome.storage) {
-      // We're in a browser extension environment
-      chrome.storage.sync.set({ language: newLanguage });
-    } else {
-      // We're in a development environment
-      localStorage.setItem('language', newLanguage);
-    }
+    await setLanguagePreference(newLanguage);
   };
 
   const handleAuthorClick = () => {

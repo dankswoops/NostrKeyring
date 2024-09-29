@@ -283,3 +283,24 @@ export const clearPersistentLoginState = async (): Promise<void> => {
   }
   return setPersistentLoginState({ isLoggedIn: false, userId: -1, pubkey: '' });
 };
+
+export const setLanguagePreference = async (language: string): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    getStorage().set({ languagePreference: language }, () => {
+      if (isExtensionEnvironment && chrome.runtime.lastError) {
+        reject(chrome.runtime.lastError);
+      } else {
+        console.log('Language preference updated');
+        resolve();
+      }
+    });
+  });
+};
+
+export const getLanguagePreference = async (): Promise<string | null> => {
+  return new Promise((resolve) => {
+    getStorage().get(['languagePreference'], (result) => {
+      resolve(result.languagePreference || null);
+    });
+  });
+};

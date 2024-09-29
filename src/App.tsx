@@ -17,7 +17,8 @@ import {
   clearLoginState, 
   getLoggedInUserProfile,
   initializeNsecCache,
-  getPersistentLoginState
+  getPersistentLoginState,
+  getLanguagePreference
 } from './utils/storage';
 import { updateBackgroundKeys } from './utils/passkeys';
 
@@ -48,10 +49,18 @@ const App = () => {
       }
       await loadUsers();
       await checkLoginState();
+      await loadLanguagePreference();
     };
 
     initialize();
   }, []);
+
+  const loadLanguagePreference = async () => {
+    const savedLanguage = await getLanguagePreference();
+    if (savedLanguage) {
+      i18n.changeLanguage(savedLanguage);
+    }
+  };
 
   const loadUsers = async () => {
     const loadedUsers = await getUserProfiles();
