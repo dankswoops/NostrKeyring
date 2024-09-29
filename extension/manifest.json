@@ -5,7 +5,7 @@
   "description": "A secure Nostr key manager for multiple browsers",
   "action": {
     "default_title": "Nostr Profile Key Manager",
-    "default_popup": "popup.html",
+    "default_popup": "App.html",
     "default_icon": {
       "16": "icons/nostrkeyring-16.png",
       "32": "icons/nostrkeyring-32.png",
