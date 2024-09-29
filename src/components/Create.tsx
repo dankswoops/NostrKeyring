@@ -106,7 +106,7 @@ export default function Create({ onUserCreated, onBack }: CreateProps) {
       nsec: finalNsec,
       npub: npub,
       pubkey: pubkeyHex,
-      name: metadata.name || `Unnamed ${randomNumber}`,
+      name: metadata.name || `${t('CreateUnnamed')} ${randomNumber}`,
       picture: metadata.picture,
       lud16: metadata.lud16
     });

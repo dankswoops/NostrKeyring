@@ -61,8 +61,8 @@ export default function Login({ onCreateProfile, onUserSelect }: LoginProps) {
               </div>
             )}
             <div id='logintext'>
-              <div id='logintextname'>{user.name || 'No Name Set'}</div>
-              <div id='logintextwallet'>{user.lud16 || 'No wallet address'}</div>
+              <div id='logintextname'>{user.name}</div>
+              <div id='logintextwallet'>{user.lud16 || t('CreateWallet')}</div>
             </div>
           </div>
         </div>
