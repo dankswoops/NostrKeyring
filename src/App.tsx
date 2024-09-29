@@ -7,7 +7,7 @@ import Header from './components/Header';
 import About from './components/About';
 import Login from './components/Login';
 import Create from './components/Create';
-import UserProfile from './components/UserProfile';
+import UserProfile from './components/Profile';
 import { 
   deleteUserProfile, 
   getUserProfiles, 

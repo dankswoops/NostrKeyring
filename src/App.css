@@ -473,7 +473,7 @@ body {
   overflow: hidden;
   text-overflow: ellipsis
 }
-/* USERPROFILE.TSX */
+/* PROFILE.TSX */
 #profile{
   height: 100%;
   display: flex;
