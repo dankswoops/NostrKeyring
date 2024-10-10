@@ -105,9 +105,9 @@ There's only 4 pages to this app.
 
 ## How The Encyption Works
 The user enters their own password    
-On profile creation each user is assigned a 16-byte random salt   
+Instead of creating a useless salt, we use the static pubkey in it's place
 Password and salt are appended then ran through a Key Derivation Function (KDF) using Argon2id   
-Now we take the KDF and AES symmetrically encrypt the Nsec   
+Now we take the KDF and AES symmetrically encrypt the Nsec using the password   
 When it's time to un-encrypt the Nsec, if the result doesn't start with "nsec1" returned invalid   
 <br />
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -117,7 +117,7 @@ When it's time to un-encrypt the Nsec, if the result doesn't start with "nsec1" 
 To Dev:   
 1. Open in your editor, [https://vscodium.com/](VSCodium) is legit
 2. You'll need NodeJS `https://nodejs.org`
-3. On root in IDE > Open Intergated Terminal > `npm i` then `npm start`, this runs ESBuild using `./build.js`
+3. On root in IDE > Open Intergated Terminal > `npm i` then `npm start`, to run ESBuild use `npm run build`
 
 To Build:   
 1. On root in IDE > Open Intergated Terminal > `npm i` then `npm run build`
