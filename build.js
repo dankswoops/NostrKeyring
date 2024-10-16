@@ -28,7 +28,7 @@ esbuild.build({
   bundle: true,
   minify: true,
   sourcemap: false,
-  treeShaking: false,
+  treeShaking: true,
   outdir: './extension',
   legalComments: 'none',
   entryPoints: {
