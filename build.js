@@ -35,6 +35,7 @@ esbuild.build({
     'App': './src/App.js',
     'nostr-tools': './src/nostr-tools.js'
   },
+  format: 'esm',
 })
 .then(() => console.log('Build success.'))
 .catch((error) => {

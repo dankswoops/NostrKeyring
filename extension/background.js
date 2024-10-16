@@ -1,22 +1,24 @@
 import * as nostrTools from './nostr-tools.js';
 
 // Use nostrTools as needed
-const { finalizeEvent, verifyEvent, nip04, nip44 } = nostrTools
+const { finalizeEvent, verifyEvent, nip04, nip44, nip19 } = nostrTools
 
 let pubkey = null;
 let seckey = null;
 
 async function signEvent(event) {
+
   try {
-    if (!event) throw new Error('Event object is undefined');
-    // Ensure required fields are present
+	if (!event) throw new Error('Event object is undefined');
+	let { type, data } = nip19.decode(seckey.toString());
+	// Ensure required fields are present
     event.kind = event.kind || 1;
     event.created_at = event.created_at || Math.floor(Date.now() / 1000);
     event.tags = event.tags || [];
     event.content = event.content || '';
     event.pubkey = pubkey;
     // Use finalizeEvent from nostr-tools/pure
-    const finalizedEvent = finalizeEvent(event, seckey);
+    const finalizedEvent = finalizeEvent(event, data);
     return finalizedEvent;
   } catch (error) {
     throw error;
