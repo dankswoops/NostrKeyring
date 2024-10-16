@@ -28,13 +28,14 @@ esbuild.build({
   bundle: true,
   minify: true,
   sourcemap: false,
-  treeShaking: true,
+  treeShaking: false,
   outdir: './extension',
   legalComments: 'none',
   entryPoints: {
     'App': './src/App.js',
     'nostr-tools': './src/nostr-tools.js'
   },
+  format: 'esm',
 })
 .then(() => console.log('Build success.'))
 .catch((error) => {
